@@ -140,7 +140,7 @@ São preocupados com a segurança alimentar e valorizam filtros por tipo de comi
 # 3. Diagramas UML
 
 ## 3.1 Casos de Uso
-<Diagrama de Caso de Uso>
+![Diagrama de Caso de Uso](UML/Caso%20de%20uso.drawio.png)
 
 ## 3.2 Classes
-<Diagrama de Classes>
+![Diagrama de Classes](UML/UML%20Classes.png)
