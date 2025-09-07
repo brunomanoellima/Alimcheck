@@ -171,18 +171,18 @@ Aqui está a arquitetura do projeto representada em **Mermaid**:
 
 ```mermaid
 flowchart TB
-  subgraph UI[Camada de Apresentação]
+  subgraph UI[Camada de Apresentacao]
     WEB[Web App (React)]
     MOB[Mobile App (React Native)]
   end
 
-  subgraph BE[Backend - Serviços de Negócio (Node.js)]
+  subgraph BE[Backend - Servicos de Negocio (Node.js)]
     API[API Gateway/Router]
-    AUTH[Autenticação & Perfis]
-    CAT[Catálogo & Busca]
-    REV[Avaliações & Rankings]
-    NOTI[Gateway de Notificações]
-    GEO[Adapter Geolocalização/Mapas]
+    AUTH[Autenticacao & Perfis]
+    CAT[Catalogo & Busca]
+    REV[Avaliacoes & Rankings]
+    NOTI[Gateway de Notificacoes]
+    GEO[Adapter Geolocalizacao/Mapas]
   end
 
   subgraph DB[Camada de Dados]
@@ -190,17 +190,17 @@ flowchart TB
     STORAGE[(Cloud Storage - Fotos)]
   end
 
-  subgraph EXT[Serviços Externos]
+  subgraph EXT[Servicos Externos]
     FCM[Firebase/OneSignal]
     SEND[SendGrid]
     TW[Twilio]
     MAPS[Google Maps / Mapbox]
   end
 
-  subgraph FUT["Módulos Futuros"]
+  subgraph FUT["Modulos Futuros"]
     style FUT stroke-dasharray: 5 5
-    DEN[Denúncias & Alertas Locais]
-    REC[Recomendação Personalizada (IA)]
+    DEN[Denuncias & Alertas Locais]
+    REC[Recomendacao Personalizada (IA)]
   end
 
   WEB --> API
@@ -221,4 +221,3 @@ flowchart TB
   GEO --> MAPS
   API -.-> DEN
   API -.-> REC
-
