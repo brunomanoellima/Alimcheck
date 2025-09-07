@@ -164,3 +164,61 @@ Se você deseja contribuir para o desenvolvimento do Alimcheck, siga estas etapa
 
 ## ⚖️ 6. Licença
 Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+# Arquitetura Componentizada - Alimcheck
+
+Aqui está a arquitetura do projeto representada em **Mermaid**:
+
+```mermaid
+flowchart TB
+  subgraph UI[Camada de Apresentação]
+    WEB[Web App (React)]
+    MOB[Mobile App (React Native)]
+  end
+
+  subgraph BE[Backend - Serviços de Negócio (Node.js)]
+    API[API Gateway/Router]
+    AUTH[Autenticação & Perfis]
+    CAT[Catálogo & Busca]
+    REV[Avaliações & Rankings]
+    NOTI[Gateway de Notificações]
+    GEO[Adapter Geolocalização/Mapas]
+  end
+
+  subgraph DB[Camada de Dados]
+    MONGO[(MongoDB)]
+    STORAGE[(Cloud Storage - Fotos)]
+  end
+
+  subgraph EXT[Serviços Externos]
+    FCM[Firebase/OneSignal]
+    SEND[SendGrid]
+    TW[Twilio]
+    MAPS[Google Maps / Mapbox]
+  end
+
+  subgraph FUT["Módulos Futuros"]
+    style FUT stroke-dasharray: 5 5
+    DEN[Denúncias & Alertas Locais]
+    REC[Recomendação Personalizada (IA)]
+  end
+
+  WEB --> API
+  MOB --> API
+  API --> AUTH
+  API --> CAT
+  API --> REV
+  API --> NOTI
+  API --> GEO
+  AUTH --> MONGO
+  CAT --> MONGO
+  REV --> MONGO
+  REV --> STORAGE
+  CAT --> STORAGE
+  NOTI --> FCM
+  NOTI --> SEND
+  NOTI --> TW
+  GEO --> MAPS
+  API -.-> DEN
+  API -.-> REC
+
