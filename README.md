@@ -7,13 +7,13 @@
 ---
 
 ## 📖 1.2 Descrição do Produto  
-O **Alimcheck** é uma aplicação **web + mobile** que permite à população de Itacoatiara **avaliar, recomendar e alertar** sobre a qualidade dos alimentos e estabelecimentos da cidade.  
+O **Alimcheck** é uma aplicação **web** que permite à população de Itacoatiara **avaliar, recomendar e alertar** sobre a qualidade dos alimentos e estabelecimentos da cidade.  
 🎯 **Objetivo**: Facilitar escolhas **mais seguras e conscientes** através de avaliações e recomendações colaborativas.
 
 ---
 
 ## 🎯 1.3 Objetivo  
-Desenvolver um **app mobile** para que os moradores de Itacoatiara:  
+Desenvolver uma **aplicação web** para que os moradores de Itacoatiara:  
 - Avaliem a qualidade dos alimentos em feiras, restaurantes e comércios 🛍️  
 - Consultem as avaliações de outros usuários 👥  
 - Tomem decisões **seguras e informadas** sobre onde comer 🍲  
@@ -110,31 +110,8 @@ A **segurança alimentar** é um tema fundamental para a saúde pública. Em Ita
 
 ### 🛠️ Pré-requisitos
 - [Node.js](https://nodejs.org/) (versão 14 ou superior)
-- [React Native CLI](https://reactnative.dev/docs/environment-setup) (se for o app mobile)
 - [MongoDB](https://www.mongodb.com/) (ou outro banco de dados de sua escolha)
 
-### 🔧 Instalação
-
-1. Clone o repositório:
-    ```bash
-    git clone https://github.com/seuusuario/alimcheck.git
-    cd alimcheck
-    ```
-
-2. Instale as dependências:
-    ```bash
-    npm install
-    ```
-
-3. Para rodar o app web:
-    ```bash
-    npm start
-    ```
-
-4. Para rodar o app mobile (em ambiente Android, por exemplo):
-    ```bash
-    npx react-native run-android
-    ```
 
 ### 🌐 Acesso Web
 - O acesso web está disponível em [www.alimcheck.com.br](http://www.alimcheck.com.br).
