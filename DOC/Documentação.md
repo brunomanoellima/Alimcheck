@@ -3,16 +3,15 @@
 ## 📌 1.1 Nome do Projeto  
 **Alimcheck**
 
----
 
 ## 📖 1.2 Descrição do Produto  
-Uma aplicação **web + mobile** que permite à própria população **avaliar, recomendar e alertar** sobre a qualidade dos alimentos e estabelecimentos da cidade.  
+Uma aplicação **web** que permite à própria população **avaliar, recomendar e alertar** sobre a qualidade dos alimentos e estabelecimentos da cidade.  
 🎯 Objetivo: ajudar moradores a fazer escolhas **mais seguras e conscientes**, apoiados pela colaboração da comunidade.
 
 ---
 
 ## 🎯 1.3 Objetivo  
-Desenvolver um **app mobile** para que os moradores de Itacoatiara:  
+Desenvolver uma **aplicação web** para que os moradores de Itacoatiara:  
 - Avaliem a qualidade dos alimentos em feiras, restaurantes e comércios 🛍️  
 - Consultem avaliações feitas por outros usuários 👥  
 - Tomem decisões **seguras e informadas** sobre onde comer 🍲  
@@ -31,7 +30,7 @@ A **segurança alimentar** é vital para a saúde pública. Em Itacoatiara, onde
 ---
 
 ## 👩‍💻 1.5 Equipe de Desenvolvimento  
-Bruno | Carlos | Cíntia | Francisco | Nélio  
+Bruno Manoel| Carlos Eduardo | Cíntia Seixas | Francisco Neto | Nelio Tobias  
 
 ---
 
@@ -43,9 +42,10 @@ Bruno | Carlos | Cíntia | Francisco | Nélio
 
 **👨‍🍳 Donos de Estabelecimentos (Ex: Carlos Mendes)**  
 - Usam celular 📱 ou PC 💻  
-- Monitoram avaliações ⭐, publicam certificados 📜 e respondem clientes.  
+- Monitoram avaliações, gerencia estabelecimentos e respondem clientes.  
 
 **👩‍🏫 Consumidores (Ex: Maria Oliveira)**  
+- Usam celular 📱 ou PC 💻
 - Procuram lugares para comer 🥗  
 - Avaliam experiências 📝  
 - Valorizam **denúncias com fotos, alertas e recomendações personalizadas**.  
@@ -54,46 +54,57 @@ Bruno | Carlos | Cíntia | Francisco | Nélio
 
 # 🎯 2. Escopo
 
-## 🚀 2.1 Escopo Específico
+## 🚀 2.1 Escopo Específico  
 
 ### 🔑 Requisitos Funcionais  
-- **RF-001 - Cadastro e Login** ✅ (Alta)  
-- **RF-002 - Listagem e Pesquisa** 🔍 (Alta)  
-- **RF-003 - Sistema de Avaliação** ⭐ (Alta)  
-- **RF-004 - Histórico e Rankings** 📊 (Média)  
-- **RF-005 - Painel Administrativo** 🛡️ (Média)  
+
+| Id    | Descrição               | Prioridade |
+|-------|-------------------------|------------|
+| RF-01 | Cadastro e Login        | Alta       |
+| RF-02 | Listagem e Pesquisa     | Alta       |
+| RF-03 | Sistema de Avaliação    | Alta       |
+| RF-04 | Histórico e Rankings    | Média      |
+| RF-05 | Painel Administrativo   | Média      |
 
 ### 🛡️ Requisitos Não Funcionais  
-- **RNF-001 - Responsividade** 📱 (Alta)  
-- **RNF-002 - Anti-Spam** 🚫 (Alta)  
-- **RNF-003 - Integridade dos Dados** 🔒 (Alta)  
-- **RNF-004 - Backup Diário** ☁️ (Média)  
+
+| Id     | Descrição               | Categoria                | Prioridade |
+|--------|-------------------------|--------------------------|------------|
+| RNF-01 | Responsividade          | Usabilidade              | Alta       |
+| RNF-02 | Anti-Spam               | Segurança                | Alta       |
+| RNF-03 | Integridade dos Dados   | Segurança / Consistência | Alta       |
+| RNF-04 | Backup Diário           | Confiabilidade           | Média      |
 
 ### ⚖️ Regras de Negócio  
-- **RN-001 - Avaliação Restrita** 🔑 (Alta)  
-- **RN-002 - Frequência de Avaliação** ⏳ (Alta)  
+
+| Id   | Descrição                                                     | Prioridade |
+|------|----------------------------------------------------------------|------------|
+| RN-01| Apenas usuários autenticados podem avaliar                     | Alta       |
+| RN-02| Cada usuário só pode avaliar periodicamente (ex.: 1x por dia)  | Alta       |
 
 ---
 
 ## 🌟 2.2 Escopo Futuro  
 
-### 🔮 Funcionalidades Planejadas  
-- **RF-F01 - Denúncias de Qualidade Alimentar** 🚨  
-- **RF-F02 - Alertas de Locais Problemáticos** ⚠️  
-- **RF-F03 - Recomendação Personalizada** 🤖  
-- **RF-F06 - Mapa Interativo** 🗺️  
-- **RF-F08 - Divulgação de Certificados Sanitários** 📜  
+### 🔮 Requisitos Funcionais  
+
+| Id    | Descrição                             | Prioridade (estimada) |
+|-------|---------------------------------------|-----------------------|
+| RF-06 | Denúncias de Qualidade Alimentar      | Alta                  |
+| RF-07 | Recomendação Personalizada            | Média                 |
 
 ### 🛡️ Requisitos Não Funcionais  
-- **RNF-F01 - Denúncias Seguras e Criptografadas** 🔐  
-- **RNF-F03 - Mapa em até 2s** ⚡  
-- **RNF-F04 - Acessibilidade (WCAG 2.1 AA)** ♿  
+
+| Id     | Descrição                           | Categoria     | Prioridade |
+|--------|-------------------------------------|---------------|------------|
+| RNF-05 | Denúncias Seguras e Criptografadas  | Segurança     | Alta       |
+| RNF-06 | Acessibilidade (WCAG 2.1 AA)        | Usabilidade   | Média      |
 
 ### ⚖️ Regras de Negócio Futuras  
-- **RN-F01 - Análise Prévia de Denúncias** 🕵️  
-- **RN-F02 - Certificados Só Após Validação** ✅  
 
----
+| Id   | Descrição                                           | Prioridade |
+|------|-----------------------------------------------------|------------|
+| RN-03| Denúncias devem passar por análise prévia           | Alta       |
 
 # 📊 3. Diagramas UML  
 
