@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerenciar Usuários - Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #5cb85c;
+            --primary-dark: #4cae4c;
+            --bg-body: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 12px;
+            --danger: #dc3545;
+            --success: #28a745;
+            --warning: #ffc107;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: var(--bg-body); 
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .topo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 15px 5%; 
+            background: var(--white); 
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-link { 
+            text-decoration: none; 
+            color: var(--primary-color); 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topo .logo { 
+            font-size: 1.6em; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        .menu { display: flex; align-items: center; gap: 15px; }
+        
+        .menu a { 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.9em;
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            transition: all 0.3s ease; 
+        }
+
+        .menu a:hover { 
+            background: rgba(92, 184, 92, 0.1); 
+            color: var(--primary-color); 
+        }
+
+        .menu a.btn-sair { color: #dc3545; }
+        .menu a.btn-sair:hover { background-color: #ffeaea; }
+
+        /* --- Main Content --- */
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+        .page-header h1 { margin: 0; font-size: 1.8rem; color: var(--text-dark); }
+        .page-header p { color: var(--text-light); margin-top: 5px; }
+
+        /* --- Toolbar (Search & Filter) --- */
+        .toolbar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            background: white;
+            padding: 15px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            align-items: center;
+        }
+
+        .search-group {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .search-group input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .search-group input:focus { border-color: var(--primary-color); }
+        .search-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+
+        .sort-group select {
+            padding: 12px 30px 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            background: white;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .btn-search {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-search:hover { background: var(--primary-dark); }
+
+        /* --- User List --- */
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .user-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .user-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: #e0e0e0;
+        }
+
+        .user-card.banned {
+            background-color: #fff5f5;
+            border-left: 5px solid var(--danger);
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #eee;
+        }
+
+        .user-info {
+            flex-grow: 1;
+            cursor: pointer; /* Indica que é clicável para ver detalhes */
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-email {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin: 2px 0 5px 0;
+        }
+
+        .user-stats {
+            font-size: 0.8rem;
+            color: #888;
+            background: #f8f9fa;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid #eee;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 3px 10px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .status-ativo { background-color: #e8f5e9; color: var(--success); }
+        .status-banido { background-color: #ffeaea; color: var(--danger); }
+
+        /* Actions */
+        .user-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 120px;
+            transition: all 0.2s;
+        }
+
+        .btn-view {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        .btn-view:hover { background-color: #bbdefb; }
+
+        .btn-ban {
+            background-color: #ffeaea;
+            color: var(--danger);
+        }
+        .btn-ban:hover { background-color: var(--danger); color: white; }
+
+        .btn-unban {
+            background-color: #e8f5e9;
+            color: var(--success);
+        }
+        .btn-unban:hover { background-color: var(--success); color: white; }
+
+        /* --- Modal --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.5);
+            display: none; justify-content: center; align-items: center; 
+            z-index: 2000; opacity: 0; transition: opacity 0.3s ease;
+            backdrop-filter: blur(2px);
+        }
+
+        .modal-overlay.active { display: flex; opacity: 1; }
+
+        .modal-content {
+            background: white; 
+            border-radius: var(--radius); 
+            width: 90%; max-width: 600px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-md); 
+            transform: scale(0.9); 
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content { transform: scale(1); }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 { margin: 0; font-size: 1.2rem; }
+        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999; }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            background: #fcfcfc;
+        }
+
+        .review-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .review-header-modal {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .review-place { font-weight: 700; color: var(--text-dark); }
+        .review-date { font-size: 0.8rem; color: #aaa; }
+        
+        .btn-delete-review {
+            color: var(--danger);
+            background: none;
+            border: none;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* Paginação */
+        .pagination-controls { 
+            display: flex; 
+            justify-content: center; 
+            gap: 8px; 
+            margin-top: 30px; 
+        }
+
+        .pagination-controls button { 
+            background: white; 
+            border: 1px solid #ddd; 
+            width: 35px; height: 35px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            color: var(--text-dark);
+        }
+
+        .pagination-controls button.active { 
+            background: var(--primary-color); 
+            color: white; 
+            border-color: var(--primary-color); 
+        }
+        .pagination-controls button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @media (max-width: 768px) {
+            .user-card { flex-direction: column; align-items: flex-start; }
+            .user-actions { width: 100%; flex-direction: row; }
+            .btn-action { flex-grow: 1; }
+            .user-avatar { width: 50px; height: 50px; }
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    (function() {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario || usuario.tipo.toLowerCase() !== 'admin') {
+            // window.location.href = 'login.html';
+            console.warn('Acesso restrito');
+        }
+    })();
+</script>
+
+<header class="topo">
+    <a href="painel-admin.html" class="logo-link">
+        <i class="fa-solid fa-utensils"></i>
+        <div class="logo">AlimCheck</div>
+    </a>
+    <nav class="menu">
+        <a href="painel-admin.html"><i class="fa-solid fa-chart-pie"></i> Painel</a>
+        <a href="perfil.html"><i class="fa-regular fa-user"></i> Perfil</a>
+        <a href="#" onclick="logout()" class="btn-sair"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a>
+    </nav>
+</header>
+
+<main class="container">
+    <div class="page-header">
+        <h1><i class="fa-solid fa-users" style="color: var(--primary-color);"></i> Gerenciar Usuários</h1>
+        <p>Monitore, filtre e gerencie o acesso dos usuários do sistema.</p>
+    </div>
+
+    <div class="toolbar">
+        <div class="search-group">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Pesquisar por nome ou e-mail...">
+        </div>
+        <div class="sort-group">
+            <select id="sortSelect">
+                <option value="avaliacoes_excluidas">⚠️ Mais Problemáticos</option>
+                <option value="nome">🔤 Ordem Alfabética</option>
+                <option value="id">🆔 Data de Cadastro</option>
+            </select>
+        </div>
+        <button id="searchButton" class="btn-search">Buscar</button>
+    </div>
+
+    <div id="resultsContainer" class="user-list">
+        <div style="text-align: center; color: #999; padding: 40px;">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size: 2em;"></i>
+            <p>Carregando usuários...</p>
+        </div>
+    </div>
+    
+    <div id="mainPaginacao" class="pagination-controls"></div>
+</main>
+
+<div id="userModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalUserName"><i class="fa-solid fa-clock-rotate-left"></i> Histórico</h2>
+            <button id="closeModal" class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="modalReviewsList"></div>
+            <div id="modalPaginacao" class="pagination-controls" style="margin-top: 15px;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_BASE_URL = 'http://localhost:3000/api';
+    const token = localStorage.getItem('token');
+    
+    function logout() { localStorage.clear(); window.location.href = 'index.html'; }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const sortSelect = document.getElementById('sortSelect');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const mainPaginacao = document.getElementById('mainPaginacao');
+        const userModal = document.getElementById('userModal');
+        const modalReviewsList = document.getElementById('modalReviewsList');
+        
+        // --- Carregar Usuários ---
+        const carregarUsuarios = async (page = 1) => {
+            const termo = searchInput.value.trim();
+            const orderBy = sortSelect.value;
+            
+            resultsContainer.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> Buscando...</div>';
+            mainPaginacao.innerHTML = '';
+
+            let url = `${API_BASE_URL}/usuarios?page=${page}&orderBy=${orderBy}`;
+            if (termo) url += `&pesquisa=${encodeURIComponent(termo)}`;
+
+            try {
+                const response = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+                if (!response.ok) throw new Error('Falha ao buscar usuários.');
+                const { data: users, pagination } = await response.json();
+                displayUsers(users);
+                renderMainPagination(pagination);
+            } catch (error) {
+                resultsContainer.innerHTML = '<p style="text-align:center; color: #dc3545;">Erro ao conectar com o servidor.</p>';
+            }
+        };
+
+        const displayUsers = (users) => {
+            resultsContainer.innerHTML = '';
+            if (users.length === 0) {
+                resultsContainer.innerHTML = '<div style="text-align:center; color:#999; padding: 40px;"><i class="fa-regular fa-face-frown"></i> Nenhum usuário encontrado.</div>';
+                return;
+            }
+            
+            users.forEach(user => {
+                if (user.tipo === 'admin') return; // Ocultar admins
+                
+                const isBanido = user.status === 'banido';
+                const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome)}&background=random&color=fff&size=128`;
+                
+                const userCard = document.createElement('div');
+                userCard.className = `user-card ${isBanido ? 'banned' : ''}`;
+                
+                userCard.innerHTML = `
+                    <img src="${avatarUrl}" alt="Avatar" class="user-avatar">
+                    <div class="user-info" onclick="openUserModal(${user.id}, '${user.nome}')">
+                        <h3 class="user-name">
+                            ${user.nome} 
+                            <span class="status-badge ${isBanido ? 'status-banido' : 'status-ativo'}">
+                                ${isBanido ? '<i class="fa-solid fa-ban"></i> Banido' : '<i class="fa-solid fa-check"></i> Ativo'}
+                            </span>
+                        </h3>
+                        <p class="user-email">${user.email}</p>
+                        <span class="user-stats"><i class="fa-solid fa-trash-can"></i> Avaliações Excluídas: <strong>${user.avaliacoes_excluidas}</strong></span>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn-action btn-view" onclick="openUserModal(${user.id}, '${user.nome}')">
+                            <i class="fa-solid fa-eye"></i> Histórico
+                        </button>
+                        <button class="btn-action ${isBanido ? 'btn-unban' : 'btn-ban'}" onclick="toggleUserBan(${user.id}, '${user.status}')">
+                            ${isBanido ? '<i class="fa-solid fa-lock-open"></i> Reativar' : '<i class="fa-solid fa-gavel"></i> Banir'}
+                        </button>
+                    </div>
+                `;
+                resultsContainer.appendChild(userCard);
+            });
+        };
+
+        const renderMainPagination = (pagination) => {
+            mainPaginacao.innerHTML = '';
+            if (!pagination || pagination.totalPages <= 1) return;
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.innerText = i;
+                if (i === pagination.currentPage) btn.className = 'active';
+                btn.onclick = () => carregarUsuarios(i);
+                mainPaginacao.appendChild(btn);
+            }
+        };
+
+        // --- Lógica do Modal (Histórico) ---
+        window.openUserModal = (userId, userName) => {
+            document.getElementById('modalUserName').innerHTML = `<i class="fa-solid fa-clock-rotate-left"></i> Histórico: ${userName}`;
+            userModal.classList.add('active');
+            loadUserReviews(userId, 1);
+        };
+
+        const loadUserReviews = async (userId, page) => {
+            modalReviewsList.innerHTML = '<div style="text-align:center; color:#999"><i class="fa-solid fa-spinner fa-spin"></i> Carregando...</div>';
+            const modalPag = document.getElementById('modalPaginacao');
+            modalPag.innerHTML = '';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/avaliacoes?usuarioId=${userId}&page=${page}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                const { data: reviews, pagination } = await response.json();
+                
+                modalReviewsList.innerHTML = '';
+                if (reviews.length === 0) {
+                    modalReviewsList.innerHTML = '<p style="text-align:center; color:#999">Este usuário ainda não fez avaliações.</p>';
+                    return;
+                }
+
+                reviews.forEach(review => {
+                    const stars = '★'.repeat(review.nota) + '☆'.repeat(5 - review.nota);
+                    const div = document.createElement('div');
+                    div.className = 'review-item';
+                    div.innerHTML = `
+                        <div class="review-header-modal">
+                            <span class="review-place">${review.nomeEstabelecimento}</span>
+                            <span class="review-date">${new Date(review.created_at).toLocaleDateString('pt-BR')}</span>
+                        </div>
+                        <div style="color: #ffc107; margin-bottom: 5px;">${stars}</div>
+                        <p style="font-style: italic; color: #555; font-size: 0.9rem;">"${review.comentario || 'Sem texto.'}"</p>
+                        <div style="text-align: right;">
+                            <button class="btn-delete-review" onclick="deleteReview(${review.id}, ${userId})">
+                                <i class="fa-solid fa-trash"></i> Excluir Avaliação
+                            </button>
+                        </div>
+                    `;
+                    modalReviewsList.appendChild(div);
+                });
+
+                // Paginação do Modal
+                if (pagination.totalPages > 1) {
+                    for (let i = 1; i <= pagination.totalPages; i++) {
+                        const btn = document.createElement('button');
+                        btn.innerText = i;
+                        if (i === pagination.currentPage) btn.className = 'active';
+                        btn.onclick = () => loadUserReviews(userId, i);
+                        modalPag.appendChild(btn);
+                    }
+                }
+            } catch (e) {
+                modalReviewsList.innerHTML = '<p>Erro ao carregar histórico.</p>';
+            }
+        };
+
+        // --- Ações ---
+        window.toggleUserBan = async (userId, currentStatus) => {
+            const newStatus = currentStatus === 'banido' ? 'ativo' : 'banido';
+            const actionText = newStatus === 'banido' ? 'BANIR' : 'REATIVAR';
+            
+            if (!confirm(`Deseja realmente ${actionText} este usuário?`)) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/usuarios/${userId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                if (!response.ok) throw new Error('Erro ao alterar status.');
+                
+                // Atualiza a lista mantendo a página atual (simplificado aqui para recarregar pagina 1)
+                carregarUsuarios(1); 
+            } catch (error) { alert(error.message); }
+        };
+
+        window.deleteReview = async (reviewId, userId) => {
+            if(!confirm("Tem certeza que deseja apagar esta avaliação?")) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/avaliacoes/${reviewId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+                if(!response.ok) throw new Error("Erro ao excluir");
+                
+                // Recarrega lista do modal
+                loadUserReviews(userId, 1);
+                // Atualiza lista principal para refletir contagem de exclusões
+                carregarUsuarios(1);
+            } catch(e) { alert(e.message); }
+        };
+
+        // Listeners
+        searchButton.addEventListener('click', () => carregarUsuarios(1));
+        searchInput.addEventListener('keyup', (e) => e.key === 'Enter' && carregarUsuarios(1));
+        sortSelect.addEventListener('change', () => carregarUsuarios(1));
+        
+        document.getElementById('closeModal').addEventListener('click', () => userModal.classList.remove('active'));
+        userModal.addEventListener('click', (e) => { if(e.target === userModal) userModal.classList.remove('active'); });
+
+        // Init
+        carregarUsuarios(1);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerenciar Denúncias - Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #5cb85c;
+            --primary-dark: #4cae4c;
+            --bg-body: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 12px;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --success: #28a745;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: var(--bg-body); 
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .topo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 15px 5%; 
+            background: var(--white); 
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-link { 
+            text-decoration: none; 
+            color: var(--primary-color); 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topo .logo { 
+            font-size: 1.6em; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        .menu { display: flex; align-items: center; gap: 15px; }
+        
+        .menu a { 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.9em;
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            transition: all 0.3s ease; 
+        }
+
+        .menu a:hover { 
+            background: rgba(92, 184, 92, 0.1); 
+            color: var(--primary-color); 
+        }
+
+        .menu a.btn-sair { color: #dc3545; }
+        .menu a.btn-sair:hover { background-color: #ffeaea; }
+
+        /* --- Main Content --- */
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .page-header h1 { margin: 0; font-size: 1.8rem; color: var(--text-dark); }
+        .page-header p { color: var(--text-light); margin-top: 5px; }
+
+        /* --- Lista de Denúncias --- */
+        .denuncia-lista { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+        }
+
+        .denuncia-card { 
+            background-color: #fff; 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow-sm); 
+            border-left: 5px solid var(--danger); 
+            padding: 25px; 
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .denuncia-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            margin-bottom: 15px; 
+            padding-bottom: 15px; 
+            border-bottom: 1px solid #f0f0f0; 
+        }
+
+        .card-header h3 { 
+            margin: 0; 
+            font-size: 1.1rem; 
+            color: var(--danger);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .total-badge { 
+            background-color: #ffeaea; 
+            color: var(--danger); 
+            font-weight: 700; 
+            padding: 5px 12px; 
+            border-radius: 50px; 
+            font-size: 0.85em; 
+            border: 1px solid #f5c6cb;
+        }
+
+        .comentario-box { 
+            background: #f8f9fa; 
+            border: 1px solid #e9ecef; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 20px; 
+            position: relative;
+        }
+
+        .comentario-box blockquote { 
+            margin: 0; 
+            font-style: italic; 
+            color: var(--text-dark); 
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .comentario-box i {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #ddd;
+            font-size: 1.5em;
+            z-index: 0;
+        }
+        
+        .comentario-content {
+            position: relative;
+            z-index: 1;
+            padding-left: 25px;
+        }
+
+        .meta-info { 
+            font-size: 0.85em; 
+            color: var(--text-light); 
+            margin-top: 10px; 
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card-actions { 
+            display: flex; 
+            gap: 10px; 
+            justify-content: flex-end;
+        }
+
+        .btn-action { 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: all 0.2s; 
+            font-size: 0.9rem; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-excluir { 
+            background-color: var(--danger); 
+            color: white; 
+            box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
+        }
+        .btn-excluir:hover { background-color: #c82333; transform: translateY(-1px); }
+
+        .btn-manter { 
+            background-color: #e2e6ea; 
+            color: var(--text-dark); 
+        }
+        .btn-manter:hover { background-color: #dbe0e5; }
+        
+        /* --- Empty & Loading --- */
+        .empty-message { 
+            text-align: center; 
+            padding: 3rem; 
+            background-color: #fff; 
+            border-radius: var(--radius); 
+            color: var(--text-light); 
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* --- Paginação --- */
+        .pagination-controls { 
+            display: flex; 
+            justify-content: center; 
+            gap: 8px; 
+            margin-top: 30px; 
+        }
+
+        .pagination-controls button { 
+            background: white; 
+            border: 1px solid #ddd; 
+            width: 35px; height: 35px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            color: var(--text-dark);
+        }
+
+        .pagination-controls button.active { 
+            background: var(--primary-color); 
+            color: white; 
+            border-color: var(--primary-color); 
+        }
+        
+        .pagination-controls button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        @media (max-width: 600px) {
+            .card-actions { flex-direction: column; }
+            .btn-action { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    (function() {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario || usuario.tipo.toLowerCase() !== 'admin') {
+            // window.location.href = 'login.html';
+            console.warn('Acesso restrito: Admin apenas');
+        }
+    })();
+</script>
+
+<header class="topo">
+    <a href="painel-admin.html" class="logo-link">
+        <i class="fa-solid fa-utensils"></i>
+        <div class="logo">AlimCheck</div>
+    </a>
+    <nav class="menu">
+        <a href="painel-admin.html"><i class="fa-solid fa-chart-pie"></i> Painel</a>
+        <a href="#" onclick="logout()" class="btn-sair"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a>
+    </nav>
+</header>
+
+<main class="container">
+    <div class="page-header">
+        <h1><i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i> Gerenciar Denúncias</h1>
+        <p>Analise e modere o conteúdo reportado pelos usuários.</p>
+    </div>
+
+    <div id="denuncia-lista" class="denuncia-lista">
+        <div class="empty-message">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size: 2em; margin-bottom: 10px;"></i>
+            <p>Carregando denúncias...</p>
+        </div>
+    </div>
+    
+    <div id="paginacao-controles" class="pagination-controls"></div>
+</main>
+
+<script>
+    const API_BASE_URL = 'http://localhost:3000';
+    const token = localStorage.getItem('token');
+
+    function logout() {
+        localStorage.clear();
+        window.location.href = 'login.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('denuncia-lista');
+        const paginacaoContainer = document.getElementById('paginacao-controles');
+
+        if (!token) {
+            // window.location.href = 'login.html';
+            // return;
+        }
+
+        async function carregarDenunciasAgrupadas(page = 1) {
+            container.innerHTML = `
+                <div class="empty-message">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 2em; margin-bottom: 10px;"></i>
+                    <p>Carregando...</p>
+                </div>`;
+            paginacaoContainer.innerHTML = ''; 
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/denuncias?page=${page}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!response.ok) throw new Error('Falha ao carregar denúncias.');
+                
+                const { data: denuncias, pagination } = await response.json();
+
+                container.innerHTML = '';
+                if (denuncias.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-message">
+                            <i class="fa-regular fa-thumbs-up" style="font-size: 3em; color: var(--success); margin-bottom: 15px;"></i>
+                            <p style="color: var(--text-dark); font-weight: 600;">Tudo limpo!</p>
+                            <p>Nenhuma denúncia pendente no momento.</p>
+                        </div>`;
+                    return;
+                }
+                
+                denuncias.forEach(d => {
+                    const card = document.createElement('div');
+                    card.className = 'denuncia-card';
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-flag"></i> Conteúdo Reportado</h3>
+                            <span class="total-badge">${d.total_denuncias} Denúncia(s)</span>
+                        </div>
+                        
+                        <div class="comentario-box">
+                            <i class="fa-solid fa-quote-left"></i>
+                            <div class="comentario-content">
+                                <blockquote>${d.avaliacao_comentario || '<i>(Avaliação sem texto)</i>'}</blockquote>
+                            </div>
+                        </div>
+                        
+                        <div class="meta-info">
+                            <span><i class="fa-solid fa-user"></i> Autor: <strong>${d.nome_avaliador || 'Anônimo'}</strong></span>
+                            <span><i class="fa-solid fa-store"></i> Local: <strong>${d.nome_estabelecimento}</strong></span>
+                        </div>
+                        
+                        <hr style="border:0; border-top:1px solid #eee; margin: 15px 0;">
+
+                        <div class="card-actions">
+                            <button class="btn-action btn-manter" data-id="${d.avaliacao_id}">
+                                <i class="fa-solid fa-check"></i> Manter (Ignorar)
+                            </button>
+                            <button class="btn-action btn-excluir" data-id="${d.avaliacao_id}" data-comentario="${(d.avaliacao_comentario || '').substring(0, 20)}...">
+                                <i class="fa-solid fa-trash"></i> Excluir Avaliação
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+                renderPaginacao(pagination);
+
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = `
+                    <div class="empty-message" style="color: var(--danger);">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 2em; margin-bottom: 10px;"></i>
+                        <p>Erro ao carregar denúncias.</p>
+                    </div>`;
+            }
+        }
+        
+        function renderPaginacao(pagination) {
+            if (!pagination || pagination.totalPages <= 1) return;
+            
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.innerText = i;
+                if (i === pagination.currentPage) btn.className = 'active';
+                btn.onclick = () => carregarDenunciasAgrupadas(i);
+                paginacaoContainer.appendChild(btn);
+            }
+        }
+        
+        // Event Delegation
+        container.addEventListener('click', async (e) => {
+            const btn = e.target.closest('.btn-action');
+            if (!btn) return;
+            
+            const avaliacaoId = btn.dataset.id;
+
+            if (btn.classList.contains('btn-excluir')) {
+                if (!confirm(`ATENÇÃO: Isso apagará permanentemente a avaliação do sistema. Continuar?`)) return;
+                
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/avaliacoes/${avaliacaoId}`, {
+                        method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (!response.ok) throw new Error('Falha ao excluir.');
+                    
+                    alert('Avaliação excluída e denúncias resolvidas.');
+                    carregarDenunciasAgrupadas(); // Recarrega a lista
+                } catch (error) { alert(`Erro: ${error.message}`); }
+            }
+
+            if (btn.classList.contains('btn-manter')) {
+                if (!confirm('Deseja ignorar as denúncias e manter esta avaliação visível?')) return;
+                
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/denuncias/resolver-por-avaliacao/${avaliacaoId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ novo_status: 'rejeitada' }) // Rejeita a denúncia, mantém a review
+                    });
+                    if (!response.ok) throw new Error('Falha ao resolver.');
+                    
+                    alert('Denúncias rejeitadas. Avaliação mantida.');
+                    carregarDenunciasAgrupadas();
+                } catch (error) { alert(`Erro: ${error.message}`); }
+            }
+        });
+
+        carregarDenunciasAgrupadas(1);
+    });
+</script>
+
+</body>
+</html>

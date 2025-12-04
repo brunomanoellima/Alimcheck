@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>AlimCheck - Descubra Sabores</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #5cb85c;
+            --primary-dark: #4cae4c;
+            --bg-body: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 16px;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: var(--bg-body); 
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .topo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 15px 5%; 
+            background: var(--white); 
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-link { 
+            text-decoration: none; 
+            color: var(--primary-color); 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topo .logo { 
+            font-size: 1.6em; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        .menu { display: flex; align-items: center; gap: 20px; }
+        
+        .menu a { 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.9em;
+            transition: color 0.2s; 
+        }
+
+        .menu a:hover { color: var(--primary-color); }
+
+        .btn-login-nav {
+            background-color: var(--primary-color);
+            color: white !important;
+            padding: 8px 20px;
+            border-radius: 50px;
+            transition: background 0.2s;
+        }
+        .btn-login-nav:hover { background-color: var(--primary-dark); }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            position: relative;
+            height: 500px;
+            background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Escurecer a imagem */
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        /* --- Search Bar --- */
+        .search-container {
+            background: white;
+            padding: 8px;
+            border-radius: 50px;
+            display: flex;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .search-container:focus-within { transform: scale(1.02); }
+
+        .search-container input {
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            padding: 15px 25px;
+            font-size: 1rem;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .search-container button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        .search-container button:hover { background: var(--primary-dark); }
+
+        /* --- Main Content --- */
+        .explorar-container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            margin-top: 40px;
+        }
+        
+        .section-title h2 { 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        /* --- Filters --- */
+        .filters-container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            margin-bottom: 2rem; 
+        }
+
+        .filter-btn { 
+            padding: 8px 20px; 
+            border: 1px solid #e0e0e0; 
+            background-color: #fff; 
+            color: var(--text-light); 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: all 0.2s; 
+            font-size: 0.9rem; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-btn:hover { 
+            border-color: var(--primary-color); 
+            color: var(--primary-color); 
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active { 
+            background-color: var(--primary-color); 
+            color: white; 
+            border-color: var(--primary-color); 
+            box-shadow: 0 4px 10px rgba(92, 184, 92, 0.3);
+        }
+
+        /* --- Grid Cards --- */
+        .grid-cards { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 30px; 
+        }
+
+        .card { 
+            background: white; 
+            border-radius: var(--radius); 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            transition: transform 0.3s, box-shadow 0.3s; 
+            box-shadow: var(--shadow-sm);
+            border: 1px solid transparent;
+            height: 100%;
+        }
+
+        .card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: var(--shadow-md); 
+            border-color: rgba(92, 184, 92, 0.2);
+        }
+
+        .card-img-wrapper {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .card img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.5s ease;
+        }
+        .card:hover img { transform: scale(1.05); }
+
+        .card-info { 
+            padding: 20px; 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .card-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .card-info h3 { 
+            margin: 0 0 8px 0; 
+            font-size: 1.2rem; 
+            font-weight: 700; 
+            color: var(--text-dark);
+        }
+
+        .rating-display { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            margin-bottom: 15px; 
+        }
+        
+        .stars { color: #ffc107; font-size: 0.9rem; }
+        .rating-text { font-size: 0.85rem; color: #999; }
+
+        .btn-card-login {
+            margin-top: auto;
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: transparent;
+            color: var(--text-light);
+            border: 1px solid #e0e0e0;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .btn-card-login:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* --- Pagination --- */
+        .paginacao-controles { 
+            display: flex; 
+            justify-content: center; 
+            gap: 8px; 
+            margin-top: 50px; 
+        }
+
+        .pagina-btn { 
+            background: white; 
+            border: 1px solid #ddd; 
+            min-width: 40px; height: 40px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            color: var(--text-dark);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pagina-btn:hover:not(:disabled) { border-color: var(--primary-color); color: var(--primary-color); }
+        .pagina-btn.active { background: var(--primary-color); color: white; border-color: var(--primary-color); box-shadow: 0 4px 10px rgba(92, 184, 92, 0.3); }
+        .pagina-btn:disabled { opacity: 0.5; cursor: not-allowed; background: #f9f9f9; }
+
+        /* --- Footer --- */
+        .rodape { 
+            background-color: white; 
+            text-align: center; 
+            padding: 40px; 
+            color: var(--text-light); 
+            font-size: 0.9em; 
+            border-top: 1px solid #eee; 
+            margin-top: 60px; 
+        }
+    </style>
+</head>
+<body>
+
+<header class="topo">
+    <a href="index.html" class="logo-link">
+        <i class="fa-solid fa-utensils"></i>
+        <div class="logo">AlimCheck</div>
+    </a>
+    <nav class="menu">
+        <a href="ranking-estabelecimentos.html"><i class="fa-solid fa-trophy"></i> Ranking</a>
+        <a href="login.html" class="btn-login-nav">Entrar</a>
+    </nav>
+</header>
+
+<section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1>O que vamos comer hoje?</h1>
+        <p>Explore os melhores estabelecimentos e compartilhe suas experiências.</p>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Busque por nome, prato ou lugar..." />
+            <button type="button" id="searchButton">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+<main class="explorar-container">
+    
+    <div class="section-title">
+        <i class="fa-solid fa-tags" style="color: var(--primary-color);"></i>
+        <h2>Categorias Populares</h2>
+    </div>
+    <div id="categoryFilters" class="filters-container">
+        <p><i class="fa-solid fa-spinner fa-spin"></i> Carregando categorias...</p>
+    </div>
+
+    <div class="section-title">
+        <i class="fa-solid fa-fire" style="color: var(--primary-color);"></i>
+        <h2>Em Destaque</h2>
+    </div>
+    
+    <div class="grid-cards" id="gridEstabelecimentos">
+        <p><i class="fa-solid fa-spinner fa-spin"></i> Carregando locais...</p>
+    </div>
+    
+    <div id="paginacaoControles" class="paginacao-controles"></div>
+</main>
+
+<footer class="rodape">
+    <p>&copy; 2025 AlimCheck. Feito com <i class="fa-solid fa-heart" style="color: var(--primary-color);"></i> para amantes de comida.</p>
+</footer>
+
+<script>
+    const API_BASE_URL = 'http://localhost:3000'; 
+
+    function pesquisar() {
+        const termo = document.getElementById('searchInput').value;
+        if(termo) {
+            window.location.href = `pesquisar-estabelecimentos.html?pesquisa=${encodeURIComponent(termo)}`;
+        }
+    }
+
+    function criarCard(estab) {
+        // Fallback de imagem
+        const imageUrl = estab.imagem ? `${API_BASE_URL}${estab.imagem}` : `https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60`;
+        
+        const cardContainer = document.createElement('div');
+        cardContainer.className = 'card';
+
+        const notaMedia = estab.nota_media ? parseFloat(estab.nota_media) : 0;
+        const totalAvaliacoes = estab.total_avaliacoes || 0;
+        const notaFormatada = notaMedia > 0 ? notaMedia.toFixed(1) : '-';
+        const textoAvaliacoes = totalAvaliacoes === 1 ? '1 avaliação' : `${totalAvaliacoes} avaliações`;
+
+        // Gerar estrelas
+        let starsHtml = '';
+        for(let i=1; i<=5; i++) {
+            if(i <= Math.round(notaMedia)) starsHtml += '<i class="fa-solid fa-star"></i>';
+            else starsHtml += '<i class="fa-regular fa-star" style="color: #ddd;"></i>';
+        }
+
+        cardContainer.innerHTML = `
+            <div class="card-img-wrapper">
+                <img src="${imageUrl}" alt="${estab.nome}" loading="lazy">
+            </div>
+            <div class="card-info">
+                <span class="card-category">${estab.categoria}</span>
+                <h3>${estab.nome}</h3>
+                <div class="rating-display">
+                    <div class="stars">${starsHtml}</div>
+                    <span class="rating-text">(${notaFormatada} • ${textoAvaliacoes})</span>
+                </div>
+                <a href="login.html" class="btn-card-login">
+                    <i class="fa-regular fa-star"></i> Faça login para Avaliar
+                </a>
+            </div>
+        `;
+        return cardContainer;
+    }
+    
+    // --- Lógica de Paginação ---
+    function renderizarPaginacao(pagination, container) {
+        container.innerHTML = '';
+        if (!pagination || pagination.totalPages <= 1) return;
+
+        // Botão Anterior
+        const btnAnterior = document.createElement('button');
+        btnAnterior.className = 'pagina-btn';
+        btnAnterior.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+        btnAnterior.disabled = pagination.currentPage === 1;
+        btnAnterior.onclick = () => carregarEstabelecimentos(pagination.currentPage - 1);
+        container.appendChild(btnAnterior);
+
+        // Páginas
+        for (let i = 1; i <= pagination.totalPages; i++) {
+            const btnPagina = document.createElement('button');
+            btnPagina.className = 'pagina-btn';
+            btnPagina.innerText = i;
+            if (i === pagination.currentPage) btnPagina.classList.add('active');
+            btnPagina.onclick = () => carregarEstabelecimentos(i);
+            container.appendChild(btnPagina);
+        }
+
+        // Botão Próximo
+        const btnProximo = document.createElement('button');
+        btnProximo.className = 'pagina-btn';
+        btnProximo.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+        btnProximo.disabled = pagination.currentPage === pagination.totalPages;
+        btnProximo.onclick = () => carregarEstabelecimentos(pagination.currentPage + 1);
+        container.appendChild(btnProximo);
+    }
+    
+    // --- Carregamento de Dados ---
+    async function carregarEstabelecimentos(page = 1) {
+        const container = document.getElementById('gridEstabelecimentos');
+        const paginacaoContainer = document.getElementById('paginacaoControles');
+        
+        container.style.opacity = '0.5';
+
+        try {
+            const resposta = await fetch(`${API_BASE_URL}/api/estabelecimentos?page=${page}&limit=8`);
+            if (!resposta.ok) throw new Error(`Erro na API`);
+            
+            const { data: estabelecimentos, pagination } = await resposta.json();
+
+            container.innerHTML = '';
+            container.style.opacity = '1';
+
+            if (estabelecimentos.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #999;"><i class="fa-regular fa-face-sad-tear" style="font-size: 2em; margin-bottom: 10px;"></i><p>Nenhum local encontrado.</p></div>`;
+                return;
+            }
+            
+            estabelecimentos.forEach(estab => {
+                container.appendChild(criarCard(estab));
+            });
+            
+            renderizarPaginacao(pagination, paginacaoContainer);
+
+        } catch (erro) {
+            console.error('Erro:', erro);
+            container.innerHTML = "<p style='color: #dc3545;'>⚠️ Erro ao conectar com o servidor.</p>";
+        }
+    }
+    
+    async function carregarCategorias() {
+        const categoryFiltersContainer = document.getElementById('categoryFilters');
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/categorias`);
+            const categorias = await response.json();
+
+            categoryFiltersContainer.innerHTML = '';
+            
+            // Botão "Todos"
+            const allButton = document.createElement('button');
+            allButton.className = 'filter-btn active';
+            allButton.innerHTML = '<i class="fa-solid fa-layer-group"></i> Todos';
+            allButton.onclick = () => { window.location.href = `pesquisar-estabelecimentos.html`; };
+            categoryFiltersContainer.appendChild(allButton);
+            
+            categorias.forEach(cat => {
+                const button = document.createElement('button');
+                button.className = 'filter-btn';
+                button.textContent = cat.nome;
+                button.onclick = () => {
+                    window.location.href = `pesquisar-estabelecimentos.html?categoria=${encodeURIComponent(cat.nome)}`;
+                };
+                categoryFiltersContainer.appendChild(button);
+            });
+        } catch (error) {
+            categoryFiltersContainer.innerHTML = "<p style='font-size: 0.9em; color: #aaa;'>Categorias indisponíveis.</p>";
+        }
+    }
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('searchButton').addEventListener('click', pesquisar);
+        document.getElementById('searchInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') pesquisar();
+        });
+
+        carregarEstabelecimentos(1); 
+        carregarCategorias();
+    });
+</script>
+</body>
+</html>

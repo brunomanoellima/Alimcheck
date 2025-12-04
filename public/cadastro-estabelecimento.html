@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo Estabelecimento - AlimCheck</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #5cb85c;
+            --primary-dark: #4cae4c;
+            --bg-body: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 16px;
+            --border-color: #e0e0e0;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: var(--bg-body); 
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .topo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 15px 5%; 
+            background: var(--white); 
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-link { 
+            text-decoration: none; 
+            color: var(--primary-color); 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topo .logo { 
+            font-size: 1.6em; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        .menu { display: flex; align-items: center; gap: 15px; }
+        
+        .menu a { 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.9em;
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            transition: all 0.3s ease; 
+        }
+
+        .menu a:hover { 
+            background: rgba(92, 184, 92, 0.1); 
+            color: var(--primary-color); 
+        }
+
+        .menu a.btn-sair { color: #dc3545; }
+        .menu a.btn-sair:hover { background-color: #ffeaea; }
+
+        /* --- Form Container --- */
+        .main-container { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 40px 20px; 
+            flex-grow: 1;
+        }
+
+        .form-card { 
+            background: white; 
+            max-width: 500px; 
+            width: 100%; 
+            padding: 40px; 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow-md); 
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Faixa decorativa */
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+        }
+
+        .header-form {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header-form h1 { 
+            margin: 0; 
+            font-size: 1.6rem; 
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+        .header-form p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* --- Form Elements --- */
+        .form-group { 
+            margin-bottom: 20px; 
+            text-align: left; 
+        }
+
+        .form-group label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+        
+        .form-group label i {
+            color: var(--primary-color);
+            margin-right: 5px;
+            width: 16px;
+            text-align: center;
+        }
+
+        .form-control { 
+            width: 100%; 
+            padding: 12px 15px; 
+            border-radius: 8px; 
+            border: 2px solid var(--border-color); 
+            font-size: 1rem; 
+            box-sizing: border-box; 
+            font-family: 'Montserrat', sans-serif; 
+            transition: border-color 0.3s;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* --- Custom File Upload --- */
+        .file-upload-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100px;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+
+        .file-upload-wrapper:hover {
+            border-color: var(--primary-color);
+            background: #f0fff4;
+        }
+
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-content {
+            text-align: center;
+            color: var(--text-light);
+            pointer-events: none;
+        }
+
+        .file-upload-content i {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 5px;
+            color: #ccc;
+        }
+        
+        .file-name-display {
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* --- Buttons --- */
+        .btn-submit { 
+            width: 100%; 
+            padding: 14px; 
+            margin-top: 10px; 
+            background: var(--primary-color); 
+            color: white; 
+            border: none; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: 700; 
+            font-size: 1rem; 
+            transition: all 0.2s; 
+            box-shadow: 0 4px 10px rgba(92, 184, 92, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover { 
+            background-color: var(--primary-dark); 
+            transform: translateY(-2px);
+        }
+
+        .btn-submit:disabled { 
+            background-color: #ccc; 
+            cursor: not-allowed; 
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    // Auth Guard: Bloqueia se não for dono
+    (function() {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario || usuario.tipo.toLowerCase() !== 'dono_estabelecimento') {
+            // Em produção: window.location.href = 'login.html';
+            console.warn('Redirecionar: Acesso negado (Auth Guard)');
+        }
+    })();
+</script>
+
+<header class="topo">
+    <a href="painel-dono.html" class="logo-link">
+        <i class="fa-solid fa-utensils"></i>
+        <div class="logo">AlimCheck</div>
+    </a>
+    <nav class="menu">
+        <a href="painel-dono.html"><i class="fa-solid fa-chart-line"></i> Painel</a>
+        <a href="meus-estabelecimentos.html"><i class="fa-solid fa-store"></i> Meus Locais</a>
+        <a href="#" onclick="logout()" class="btn-sair"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a>
+    </nav>
+</header>
+
+<main class="main-container">
+    <div class="form-card">
+        <div class="header-form">
+            <h1><i class="fa-solid fa-shop" style="color: var(--primary-color);"></i> Novo Estabelecimento</h1>
+            <p>Preencha os dados para começar a receber avaliações.</p>
+        </div>
+
+        <form id="formEstabelecimento">
+            <div class="form-group">
+                <label for="nome"><i class="fa-solid fa-tag"></i> Nome do Estabelecimento</label>
+                <input type="text" id="nome" class="form-control" placeholder="Ex: Pizzaria do João" required>
+            </div>
+
+            <div class="form-group">
+                <label for="endereco"><i class="fa-solid fa-location-dot"></i> Endereço Completo</label>
+                <input type="text" id="endereco" class="form-control" placeholder="Rua, Número, Bairro" required>
+            </div>
+
+            <div class="form-group">
+                <label for="categoria"><i class="fa-solid fa-list"></i> Categoria</label>
+                <select id="categoria" class="form-control" required>
+                    <option value="" disabled selected>Carregando categorias...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-image"></i> Foto de Capa (Opcional)</label>
+                <div class="file-upload-wrapper" id="drop-zone">
+                    <input type="file" id="imagem" name="imagem" accept="image/png, image/jpeg">
+                    <div class="file-upload-content">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Clique ou arraste uma foto aqui</span>
+                        <div id="file-name" class="file-name-display"></div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <span>Cadastrar Estabelecimento</span>
+                <i class="fa-solid fa-check"></i>
+            </button>
+        </form>
+    </div>
+</main>
+    
+<script>
+    const API_BASE_URL = 'http://localhost:3000';
+    const token = localStorage.getItem('token');
+
+    function logout() {
+        if (confirm('Você tem certeza que deseja sair?')) {
+            localStorage.removeItem('usuario');
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        }
+    }
+
+    // UX: Atualizar nome do arquivo selecionado
+    const fileInput = document.getElementById('imagem');
+    const fileNameDisplay = document.getElementById('file-name');
+    
+    fileInput.addEventListener('change', function() {
+        if(this.files && this.files.length > 0) {
+            fileNameDisplay.textContent = this.files[0].name;
+            fileNameDisplay.style.display = 'block';
+            document.querySelector('.file-upload-content span').style.display = 'none';
+            document.querySelector('.file-upload-content i').className = 'fa-solid fa-file-image';
+            document.querySelector('.file-upload-content i').style.color = '#5cb85c';
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const selectCategoria = document.getElementById('categoria');
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/categorias`);
+            const categorias = await response.json();
+            
+            selectCategoria.innerHTML = '<option value="" disabled selected>Selecione uma categoria...</option>';
+
+            categorias.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.id;
+                option.textContent = cat.nome;
+                selectCategoria.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Erro ao carregar categorias:', error);
+            selectCategoria.innerHTML = '<option value="">Erro de conexão</option>';
+        }
+    });
+
+    document.getElementById('formEstabelecimento').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const imagemInput = document.getElementById('imagem');
+        const file = imagemInput.files[0];
+        let imageUrl = null;
+
+        const submitButton = e.target.querySelector('button[type="submit"]');
+        const originalBtnText = submitButton.innerHTML;
+        
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cadastrando...';
+
+        try {
+            // 1. Upload da imagem
+            if (file) {
+                const formData = new FormData();
+                formData.append('imagem', file);
+                const uploadResponse = await fetch(`${API_BASE_URL}/api/upload`, {
+                    method: 'POST',
+                    body: formData,
+                });
+                if (!uploadResponse.ok) throw new Error('Falha no upload da imagem.');
+                const uploadResult = await uploadResponse.json();
+                imageUrl = uploadResult.url;
+            }
+
+            // 2. Cadastro
+            const dadosCadastro = {
+                nome: document.getElementById('nome').value.trim(),
+                endereco: document.getElementById('endereco').value.trim(),
+                categoria_id: document.getElementById('categoria').value,
+                imagem_url: imageUrl
+            };
+
+            const response = await fetch(`${API_BASE_URL}/api/estabelecimentos`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(dadosCadastro),
+            });
+            
+            const resultado = await response.json();
+            if (!response.ok) throw new Error(resultado.error || 'Erro desconhecido');
+
+            // Feedback visual de sucesso
+            submitButton.innerHTML = '<i class="fa-solid fa-check-double"></i> Sucesso!';
+            submitButton.style.backgroundColor = '#28a745';
+            
+            setTimeout(() => {
+                alert('Estabelecimento cadastrado com sucesso!');
+                window.location.href = 'meus-estabelecimentos.html';
+            }, 500);
+            
+        } catch (error) {
+            console.error('Erro:', error);
+            alert(`Erro ao cadastrar: ${error.message}`);
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalBtnText;
+        }
+    });
+</script>
+</body>
+</html>

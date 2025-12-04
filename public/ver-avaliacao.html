@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Ver Avaliações - AlimCheck</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', Arial, sans-serif; margin: 0; background: #f4f7f6; color: #222; }
+        .topo { display: flex; align-items: center; justify-content: space-between; padding: 10px 25px; background: #5cb85c; color: #fff; }
+        .logo-link { text-decoration: none; color: inherit; }
+        .topo .logo { font-size: 1.4em; font-weight: bold; }
+        .menu a { color: #fff; text-decoration: none; font-weight: 500; padding: 6px 12px; border-radius: 20px; transition: background 0.2s; }
+        .menu a:hover { background: rgba(255,255,255,0.2); }
+        .container { max-width: 800px; margin: 2rem auto; padding: 1rem; }
+        .titulo-wrapper { text-align: center; margin-bottom: 2rem; }
+        .titulo-wrapper h1 { font-size: 1.8em; font-weight: 600; color: #333; }
+        #lista-avaliacoes { display: flex; flex-direction: column; gap: 1.5rem; }
+        .avaliacao-card { background-color: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); border: 1px solid #e9ecef; padding: 1.5rem 2rem; }
+        .usuario-info { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; font-weight: 600; color: #495057; }
+        .avatar-avaliador { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background-color: #eee; }
+        .avaliacao-card .nota { font-size: 1.2rem; color: #f1c40f; margin-bottom: 1rem; }
+        .avaliacao-card .comentario { color: #343a40; line-height: 1.6; font-size: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #f0f0f0; }
+        .avaliacao-card .data { font-size: 0.8rem; color: #adb5bd; margin-top: 1rem; }
+        .empty-message { text-align: center; padding: 3rem; background-color: #fff; border-radius: 12px; border: 1px solid #e9ecef; color: #6c757d; font-size: 1.1rem; }
+        .resposta-dono { margin-top: 1.5rem; padding: 1rem; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef; }
+        .resposta-dono p { margin: 0; line-height: 1.5; }
+        .resposta-dono strong { color: #5cb85c; }
+        .btn-responder { display: block; width: fit-content; margin-top: 1rem; padding: 0.5rem 1rem; background-color: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; }
+        .btn-responder:hover { background-color: #0056b3; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content { background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transform: scale(0.95); transition: transform 0.3s ease; position: relative; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-content h2 { margin-top: 0; }
+        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 1.5rem; font-weight: bold; cursor: pointer; border: none; background: none; color: #aaa; }
+        .close-modal:hover { color: #333; }
+        .modal-content textarea { width: 100%; min-height: 120px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; resize: vertical; }
+        .modal-content button[type="submit"] { width: 100%; padding: 12px; margin-top: 1rem; background: #5cb85c; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1rem; }
+        /* ESTILOS PARA PAGINAÇÃO - ADICIONADO */
+        #paginacao-controles { display: flex; justify-content: center; align-items: center; margin-top: 2rem; gap: 8px; }
+        .pagina-btn { padding: 8px 15px; border: 1px solid #ddd; background-color: #fff; color: #333; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+        .pagina-btn:hover:not(:disabled) { border-color: #5cb85c; color: #5cb85c; }
+        .pagina-btn:disabled { background-color: #f4f7f6; cursor: not-allowed; color: #aaa; }
+        .pagina-btn.active { background-color: #5cb85c; color: white; border-color: #5cb85c; }
+    </style>
+</head>
+<body>
+
+<header class="topo">
+    <a href="painel-dono.html" class="logo-link"><div class="logo">AlimCheck</div></a>
+    <nav class="menu" id="menu-principal">
+        <a href="meus-estabelecimentos.html">Voltar</a>
+        <a href="#" id="logout-btn">Sair</a>
+    </nav>
+</header>
+
+<main class="container">
+    <div class="titulo-wrapper">
+        <h1 id="nome-estabelecimento">Carregando...</h1>
+    </div>
+    <div id="lista-avaliacoes"></div>
+    <div id="paginacao-controles"></div>
+</main>
+
+<div id="resposta-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button id="close-modal" class="close-modal">&times;</button>
+        <h2>Responder à Avaliação</h2>
+        <form id="resposta-form">
+            <textarea id="resposta-texto" placeholder="Digite sua resposta aqui..." required></textarea>
+            <button type="submit">Enviar Resposta</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Auth Guard para garantir que apenas donos acessem a página.
+    (function() {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario || usuario.tipo.toLowerCase() !== 'dono_estabelecimento') {
+            alert('Acesso negado. Esta página é apenas para donos de estabelecimentos.');
+            window.location.href = 'login.html';
+        }
+    })();
+
+    // Lógica principal
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const API_BASE_URL = 'http://localhost:3000';
+        const token = localStorage.getItem('token');
+        const urlParams = new URLSearchParams(window.location.search);
+        const estabelecimentoId = urlParams.get('id');
+
+        // Elementos da Página
+        const h1 = document.getElementById('nome-estabelecimento');
+        const containerAvaliacoes = document.getElementById('lista-avaliacoes');
+        const containerPaginacao = document.getElementById('paginacao-controles');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        // Elementos do Modal
+        const respostaModal = document.getElementById('resposta-modal');
+        const respostaForm = document.getElementById('resposta-form');
+        const respostaTextarea = document.getElementById('resposta-texto');
+        const closeModalButton = document.getElementById('close-modal');
+
+        // --- FUNÇÕES ---
+
+        function logout() {
+            if (confirm('Deseja sair?')) {
+                localStorage.removeItem('usuario');
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+            }
+        }
+        logoutBtn.addEventListener('click', logout);
+
+        function abrirModalResposta(avaliacaoId) {
+            respostaForm.dataset.avaliacaoId = avaliacaoId;
+            respostaModal.classList.add('active');
+        }
+
+        function fecharModalResposta() {
+            respostaModal.classList.remove('active');
+            respostaForm.reset();
+        }
+
+        function renderizarAvaliacaoUnica(av) {
+            const card = document.createElement('div');
+            card.className = 'avaliacao-card';
+            const dataFormatada = new Date(av.created_at).toLocaleDateString('pt-BR');
+            const avatarSrc = av.avatarUsuario 
+                ? `${API_BASE_URL}${av.avatarUsuario}` 
+                : `https://ui-avatars.com/api/?name=${encodeURIComponent(av.nomeUsuario || 'A')}&background=5cb85c&color=fff&size=40`;
+
+            card.innerHTML = `
+                <div class="usuario-info">
+                    <img src="${avatarSrc}" alt="Avatar de ${av.nomeUsuario}" class="avatar-avaliador">
+                    <span>${av.nomeUsuario || 'Usuário Anônimo'}</span>
+                </div>
+                <div class="nota">${'★'.repeat(av.nota)}${'☆'.repeat(5 - av.nota)}</div>
+                <p class="comentario">"${av.comentario || 'Nenhum comentário.'}"</p>
+                <p class="data">Avaliado em: ${dataFormatada}</p>
+                <div class="resposta-container"></div> `;
+            
+            const respostaContainer = card.querySelector('.resposta-container');
+            if (av.resposta_dono) {
+                const respostaHtml = `<div class="resposta-dono"><p><strong>Sua Resposta:</strong></p><p>${av.resposta_dono}</p></div>`;
+                respostaContainer.innerHTML = respostaHtml;
+            } else {
+                const btn = document.createElement('button');
+                btn.className = 'btn-responder';
+                btn.textContent = 'Responder';
+                btn.onclick = () => abrirModalResposta(av.id);
+                respostaContainer.appendChild(btn);
+            }
+            return card;
+        }
+
+        function renderizarPaginacao(pagination) {
+            containerPaginacao.innerHTML = '';
+            if (!pagination || pagination.totalPages <= 1) return;
+
+            const criarBotao = (texto, page, ativado = true) => {
+                const btn = document.createElement('button');
+                btn.className = 'pagina-btn';
+                btn.innerText = texto;
+                btn.disabled = !ativado;
+                if(ativado) btn.onclick = () => carregarAvaliacoes(page);
+                return btn;
+            };
+
+            containerPaginacao.appendChild(criarBotao('Anterior', pagination.currentPage - 1, pagination.currentPage > 1));
+
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                const btn = criarBotao(i, i, true);
+                if (i === pagination.currentPage) btn.classList.add('active');
+                containerPaginacao.appendChild(btn);
+            }
+
+            containerPaginacao.appendChild(criarBotao('Próximo', pagination.currentPage + 1, pagination.currentPage < pagination.totalPages));
+        }
+
+        async function carregarAvaliacoes(page = 1) {
+            containerAvaliacoes.innerHTML = '<p class="empty-message">Carregando avaliações...</p>';
+            containerPaginacao.innerHTML = '';
+
+            try {
+                // CORREÇÃO: A API agora precisa da página e retorna um objeto
+                const response = await fetch(`${API_BASE_URL}/api/avaliacoes?estabelecimentoId=${estabelecimentoId}&page=${page}`);
+                if (!response.ok) throw new Error('Falha na resposta da rede.');
+                
+                // CORREÇÃO: Desestruturando a resposta corretamente
+                const { data: avaliacoes, pagination } = await response.json();
+                
+                // Pega o nome do estabelecimento da primeira avaliação (se houver)
+                if (page === 1 && avaliacoes.length > 0) {
+                    h1.textContent = `Avaliações de "${avaliacoes[0].nomeEstabelecimento}"`;
+                } else if (page === 1 && avaliacoes.length === 0) {
+                    // Se não houver avaliações, busca o nome do estabelecimento em outra rota
+                    const estResponse = await fetch(`${API_BASE_URL}/api/estabelecimentos/${estabelecimentoId}`);
+                    const est = await estResponse.json();
+                    h1.textContent = `Avaliações de "${est.nome}"`;
+                }
+
+                containerAvaliacoes.innerHTML = '';
+                if (avaliacoes.length > 0) {
+                    avaliacoes.forEach(av => containerAvaliacoes.appendChild(renderizarAvaliacaoUnica(av)));
+                    renderizarPaginacao(pagination);
+                } else {
+                    containerAvaliacoes.innerHTML = '<p class="empty-message">Este estabelecimento ainda não recebeu avaliações.</p>';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar avaliações:', error);
+                h1.textContent = 'Erro ao Carregar';
+                containerAvaliacoes.innerHTML = '<p class="empty-message">Não foi possível carregar as avaliações.</p>';
+            }
+        }
+        
+        // --- INICIALIZAÇÃO ---
+
+        if (!estabelecimentoId) {
+            alert('ID do estabelecimento não encontrado na URL.');
+            window.location.href = 'meus-estabelecimentos.html';
+            return;
+        }
+
+        // Listeners do Modal
+        closeModalButton.addEventListener('click', fecharModalResposta);
+        respostaModal.addEventListener('click', (e) => {
+            if (e.target === respostaModal) fecharModalResposta();
+        });
+        respostaForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const avaliacaoId = e.target.dataset.avaliacaoId;
+            const respostaTexto = respostaTextarea.value.trim();
+            if (!respostaTexto) return alert('A resposta não pode estar vazia.');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/respostas`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ avaliacao_id: avaliacaoId, resposta: respostaTexto })
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error || 'Erro desconhecido');
+                alert('Resposta enviada com sucesso!');
+                carregarAvaliacoes(); // Recarrega as avaliações para mostrar a nova resposta
+                fecharModalResposta();
+            } catch (error) {
+                alert(`Erro ao enviar resposta: ${error.message}`);
+            }
+        });
+
+        // Carrega os dados da primeira página ao iniciar
+        carregarAvaliacoes(1);
+    });
+</script>
+</body>
+</html>

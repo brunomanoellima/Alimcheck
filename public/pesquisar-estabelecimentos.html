@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Pesquisar Estabelecimentos - AlimCheck</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', Arial, sans-serif; margin: 0; background: #f4f7f6; color: #222; }
+        .topo { display: flex; align-items: center; justify-content: space-between; padding: 10px 25px; background: #5cb85c; color: #fff; }
+        .logo-link { text-decoration: none; color: inherit; }
+        .topo .logo { font-size: 1.4em; font-weight: bold; }
+        .menu { display: flex; align-items: center; gap: 15px; }
+        .menu a { color: #fff; text-decoration: none; font-weight: 500; padding: 6px 12px; border-radius: 20px; transition: background 0.2s; }
+        .menu a:hover { background: rgba(255,255,255,0.2); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .hero { text-align: center; padding: 30px 20px; background: #fff; border-radius: 12px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .hero h2 { font-size: 1.8em; margin-bottom: 15px; font-weight: 600; color: #333; }
+        .search-bar { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
+        .search-bar input { padding: 12px; width: 400px; border: 1px solid #ddd; border-radius: 25px; font-size: 1rem; }
+        .search-bar button { padding: 12px 25px; background: #5cb85c; color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 1rem; }
+        .secao { margin-top: 40px; }
+        .secao h3 { font-size: 1.4em; margin-bottom: 20px; font-weight: 600; }
+        .filters-container { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; }
+        .filter-btn { padding: 0.6rem 1.2rem; border: 1px solid #ccc; background-color: #fff; color: #333; border-radius: 20px; cursor: pointer; font-weight: 500; transition: all 0.2s; font-size: 0.9rem; }
+        .filter-btn:hover { border-color: #5cb85c; color: #5cb85c; }
+        .filter-btn.active { background-color: #5cb85c; color: white; border-color: #5cb85c; }
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; min-height: 200px; }
+        .card-link { text-decoration: none; color: inherit; display: block; background-color: white; border: 1px solid #ddd; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; height: 100%; }
+        .card-link:hover { transform: scale(1.02); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .card-link img { width: 100%; height: 150px; object-fit: cover; }
+        .card-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-info h3 { margin: 0 0 5px 0; font-size: 1.1em; font-weight: 600; }
+        .card-info p { font-size: 0.9em; color: #555; margin: 0; }
+        .rating-display { display: flex; align-items: center; gap: 8px; margin-top: auto; padding-top: 10px; }
+        .stars { display: inline-block; font-size: 0; position: relative; }
+        .stars::before { content: '★★★★★'; font-size: 18px; color: #ddd; }
+        .stars::after { content: '★★★★★'; font-size: 18px; color: #f1c40f; position: absolute; top: 0; left: 0; white-space: nowrap; overflow: hidden; width: var(--rating); }
+        .rating-display span { font-size: 0.85em; color: #777; }
+        .empty-message { grid-column: 1 / -1; text-align: center; padding: 2rem; color: #777; }
+        .pagination-controls { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 2.5rem; flex-wrap: wrap; }
+        .pagination-controls button { background-color: #fff; border: 1px solid #ddd; color: #5cb85c; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .pagination-controls button:disabled { color: #ccc; cursor: not-allowed; }
+        .pagination-controls button.active { background-color: #5cb85c; color: white; border-color: #5cb85c; }
+    </style>
+</head>
+<body>
+
+<header class="topo">
+    <a href="index.html" id="logo-link" class="logo-link"><div class="logo">AlimCheck</div></a>
+    <nav class="menu" id="nav-menu"></nav>
+</header>
+
+<main class="container">
+    <section class="hero">
+        <h2>Pesquisar Estabelecimentos</h2>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Buscar por nome...">
+            <button id="searchButton">Buscar</button>
+        </div>
+    </section>
+
+    <section class="secao">
+        <h3>Filtre por Categoria</h3>
+        <div id="categoryFilters" class="filters-container"></div>
+    </section>
+
+    <section class="secao">
+        <h2>Resultados</h2>
+        <div class="grid-cards" id="resultsGrid"><p class="empty-message">Use a busca ou os filtros para encontrar estabelecimentos.</p></div>
+        <div id="pagination-controls" class="pagination-controls"></div>
+    </section>
+</main>
+
+<script>
+    const API_BASE_URL = 'http://localhost:3000';
+    let currentSearchTerm = '';
+    let currentCategory = '';
+
+    function logout() {
+        localStorage.removeItem('usuario');
+        localStorage.removeItem('token');
+        window.location.href = 'index.html';
+    }
+
+    function criarCard(estab) {
+        const imageUrl = estab.imagem ? `${API_BASE_URL}${estab.imagem}` : `https://picsum.photos/seed/${estab.id}/400/200`;
+        const cardLink = document.createElement('a');
+        cardLink.href = `estabelecimento-detalhes.html?id=${estab.id}`;
+        cardLink.className = 'card-link';
+        const notaMedia = estab.nota_media ? parseFloat(estab.nota_media) : 0;
+        const totalAvaliacoes = estab.total_avaliacoes || 0;
+        const ratingPercent = (notaMedia / 5) * 100;
+        const notaFormatada = notaMedia > 0 ? notaMedia.toFixed(1) : 'Novo';
+        const textoAvaliacoes = totalAvaliacoes === 1 ? '1 avaliação' : `${totalAvaliacoes} avaliações`;
+        cardLink.innerHTML = `
+            <img src="${imageUrl}" alt="${estab.nome}">
+            <div class="card-info">
+                <h3>${estab.nome}</h3>
+                <p>${estab.categoria}</p>
+                <div class="rating-display">
+                    <div class="stars" style="--rating: ${ratingPercent}%;"></div>
+                    <span>${notaFormatada} (${textoAvaliacoes})</span>
+                </div>
+            </div>
+        `;
+        return cardLink;
+    }
+
+    async function executarPesquisa(termo = '', categoria = '', page = 1) {
+        const resultsContainer = document.getElementById('resultsGrid');
+        const paginationContainer = document.getElementById('pagination-controls');
+        resultsContainer.innerHTML = '<p class="empty-message">Buscando...</p>';
+        paginationContainer.innerHTML = '';
+        
+        currentSearchTerm = termo;
+        currentCategory = categoria;
+
+        const params = new URLSearchParams({ page });
+        if (termo) params.append('pesquisa', termo);
+        if (categoria) params.append('categoria', categoria);
+        
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/estabelecimentos?${params.toString()}`);
+            const result = await response.json();
+            const estabelecimentos = result.data;
+            const pagination = result.pagination;
+
+            resultsContainer.innerHTML = '';
+            if (estabelecimentos && estabelecimentos.length > 0) {
+                estabelecimentos.forEach(estab => resultsContainer.appendChild(criarCard(estab)));
+                renderPagination(pagination);
+            } else {
+                resultsContainer.innerHTML = '<p class="empty-message">Nenhum estabelecimento encontrado com esses critérios.</p>';
+            }
+        } catch (error) {
+            console.error("Erro ao executar pesquisa:", error);
+            resultsContainer.innerHTML = '<p class="empty-message">Erro ao buscar estabelecimentos.</p>';
+        }
+    }
+
+    function renderPagination(pagination) {
+        const { totalPages, currentPage } = pagination;
+        const container = document.getElementById('pagination-controls');
+        container.innerHTML = '';
+        if (totalPages <= 1) return;
+
+        const prevButton = document.createElement('button');
+        prevButton.textContent = 'Anterior';
+        prevButton.disabled = currentPage === 1;
+        prevButton.onclick = () => executarPesquisa(currentSearchTerm, currentCategory, currentPage - 1);
+        container.appendChild(prevButton);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i;
+            if (i === currentPage) pageButton.classList.add('active');
+            pageButton.onclick = () => executarPesquisa(currentSearchTerm, currentCategory, i);
+            container.appendChild(pageButton);
+        }
+
+        const nextButton = document.createElement('button');
+        nextButton.textContent = 'Próxima';
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.onclick = () => executarPesquisa(currentSearchTerm, currentCategory, currentPage + 1);
+        container.appendChild(nextButton);
+    }
+
+    async function carregarCategorias(categoriaInicial = '') {
+        const categoryFiltersContainer = document.getElementById('categoryFilters');
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/categorias`);
+            const categorias = await response.json();
+            categoryFiltersContainer.innerHTML = '';
+
+            const btnTodas = document.createElement('button');
+            btnTodas.className = 'filter-btn';
+            btnTodas.textContent = 'Todas';
+            if (!categoriaInicial) btnTodas.classList.add('active');
+            btnTodas.onclick = () => {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                btnTodas.classList.add('active');
+                executarPesquisa(document.getElementById('searchInput').value, '', 1);
+            };
+            categoryFiltersContainer.appendChild(btnTodas);
+
+            categorias.forEach(cat => {
+                const button = document.createElement('button');
+                button.className = 'filter-btn';
+                button.textContent = cat.nome;
+                if (categoriaInicial === cat.nome) button.classList.add('active');
+                button.onclick = () => {
+                    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    executarPesquisa(document.getElementById('searchInput').value, cat.nome, 1);
+                };
+                categoryFiltersContainer.appendChild(button);
+            });
+        } catch (error) {
+            console.error('Erro ao buscar categorias:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const navMenu = document.getElementById('nav-menu');
+        const logoLink = document.getElementById('logo-link');
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+        let homeUrl = 'index.html';
+        let navLinksHTML = `<a href="ranking-estabelecimentos.html">Ranking</a><a href="login.html">Entrar</a>`;
+        if (usuario) {
+            const userType = usuario.tipo.toLowerCase();
+            if (userType === 'admin') {
+                homeUrl = 'painel-admin.html';
+                navLinksHTML = `<a href="perfil.html">Perfil</a><a href="gerenciar-usuarios.html">Gerenciar Usuários</a><a href="ranking-estabelecimentos.html">Ranking</a><a href="#" onclick="logout()">Sair</a>`;
+            } else if (userType === 'dono_estabelecimento') {
+                homeUrl = 'painel-dono.html';
+                navLinksHTML = `<a href="perfil.html">Perfil</a><a href="painel-dono.html">Painel</a><a href="ranking-estabelecimentos.html">Ranking</a><a href="#" onclick="logout()">Sair</a>`;
+            } else {
+                homeUrl = 'menu-principal.html';
+                navLinksHTML = `<a href="perfil.html">Perfil</a><a href="minhas-avaliacoes.html">Minhas Avaliações</a><a href="ranking-estabelecimentos.html">Ranking</a><a href="#" onclick="logout()">Sair</a>`;
+            }
+        }
+        navMenu.innerHTML = navLinksHTML;
+        logoLink.href = homeUrl;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const pesquisaInicial = urlParams.get('pesquisa') || '';
+        const categoriaInicial = urlParams.get('categoria') || '';
+
+        searchInput.value = pesquisaInicial;
+        // Chama a busca inicial e o carregamento de categorias
+        executarPesquisa(pesquisaInicial, categoriaInicial, 1);
+        carregarCategorias(categoriaInicial);
+
+        searchButton.addEventListener('click', () => {
+            const categoriaAtiva = document.querySelector('.filter-btn.active');
+            const categoria = categoriaAtiva && categoriaAtiva.textContent !== 'Todas' ? categoriaAtiva.textContent : '';
+            executarPesquisa(searchInput.value, categoria, 1);
+        });
+
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') searchButton.click();
+        });
+    });
+</script>
+</body>
+</html>

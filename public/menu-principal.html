@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>AlimCheck - Início</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #5cb85c;
+            --primary-dark: #4cae4c;
+            --bg-body: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 15px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: var(--bg-body); 
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header / Navigation --- */
+        .topo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 15px 5%; 
+            background: var(--white); 
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-link { 
+            text-decoration: none; 
+            color: var(--primary-color); 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topo .logo { 
+            font-size: 1.6em; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        .menu { display: flex; align-items: center; gap: 20px; }
+        
+        .menu a { 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.95em;
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            transition: all 0.3s ease; 
+        }
+
+        .menu a:hover { 
+            background: rgba(92, 184, 92, 0.1); 
+            color: var(--primary-color); 
+        }
+
+        /* Destaque para o botão sair ou admin */
+        .menu a.btn-destaque {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .menu a.btn-destaque:hover {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+
+        /* --- Hero Section (Boas Vindas) --- */
+        .hero-bg {
+            background: linear-gradient(135deg, #5cb85c 0%, #4cae4c 100%);
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 { 
+            font-size: 2.2em; 
+            margin: 0 0 25px 0; 
+            font-weight: 700; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* --- Search Bar Modernizada --- */
+        .search-container {
+            background: white;
+            padding: 8px;
+            border-radius: 50px;
+            display: flex;
+            box-shadow: var(--shadow-md);
+            max-width: 600px;
+            margin: 0 auto;
+            transition: transform 0.2s;
+        }
+
+        .search-container:focus-within {
+            transform: scale(1.02);
+        }
+
+        .search-container input { 
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .search-container button { 
+            background: var(--primary-color); 
+            color: white; 
+            border: none; 
+            padding: 12px 30px; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 1rem;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-container button:hover { 
+            background: var(--primary-dark); 
+        }
+
+        /* --- Main Layout --- */
+        .explorar-container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 20px 40px 20px; 
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .secao { margin-top: 40px; }
+        
+        .secao-titulo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .secao h2 { 
+            font-size: 1.5em; 
+            margin: 0; 
+            font-weight: 700; 
+            color: var(--text-dark);
+        }
+
+        /* --- Filtros --- */
+        .filters-container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            margin-bottom: 2rem; 
+        }
+
+        .filter-btn { 
+            padding: 8px 18px; 
+            border: 1px solid #e0e0e0; 
+            background-color: #fff; 
+            color: var(--text-light); 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: all 0.2s; 
+            font-size: 0.9rem; 
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .filter-btn:hover { 
+            border-color: var(--primary-color); 
+            color: var(--primary-color); 
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active { 
+            background-color: var(--primary-color); 
+            color: white; 
+            border-color: var(--primary-color); 
+            box-shadow: 0 4px 10px rgba(92, 184, 92, 0.3);
+        }
+
+        /* --- Grid & Cards --- */
+        .grid-cards { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 30px; 
+            min-height: 200px; 
+        }
+
+        .card-link { 
+            text-decoration: none; 
+            color: inherit; 
+            display: flex; 
+            flex-direction: column; 
+            background-color: white; 
+            border-radius: 16px; 
+            overflow: hidden; 
+            box-shadow: var(--shadow-sm); 
+            transition: all 0.3s ease; 
+            border: 1px solid transparent;
+            height: 100%;
+        }
+
+        .card-link:hover { 
+            transform: translateY(-5px); 
+            box-shadow: var(--shadow-md); 
+            border-color: rgba(92, 184, 92, 0.2);
+        }
+
+        .card-img-wrapper {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .card-link img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.5s ease;
+        }
+
+        .card-link:hover img {
+            transform: scale(1.05);
+        }
+
+        .card-info { 
+            padding: 20px; 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .card-category {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .card-info h3 { 
+            margin: 0 0 10px 0; 
+            font-size: 1.2em; 
+            font-weight: 700; 
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        .rating-display { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            margin-top: auto; 
+            padding-top: 15px; 
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .stars { 
+            display: inline-block; 
+            font-size: 0; 
+            position: relative; 
+        }
+
+        .stars::before { 
+            content: '\f005 \f005 \f005 \f005 \f005'; 
+            font-family: 'Font Awesome 6 Free'; 
+            font-weight: 900;
+            font-size: 14px; 
+            color: #e0e0e0; 
+        }
+
+        .stars::after { 
+            content: '\f005 \f005 \f005 \f005 \f005'; 
+            font-family: 'Font Awesome 6 Free'; 
+            font-weight: 900;
+            font-size: 14px; 
+            color: #ffc107; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            width: var(--rating); 
+        }
+
+        .rating-text {
+            font-size: 0.85em; 
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .rating-score {
+            font-weight: 700;
+            color: var(--text-dark);
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+
+        /* --- Paginação --- */
+        .pagination-controls { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 8px; 
+            margin-top: 3rem; 
+            padding-bottom: 2rem;
+        }
+
+        .pagination-controls button { 
+            background-color: white; 
+            border: 1px solid #ddd; 
+            color: var(--text-dark); 
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer; 
+            font-weight: 600; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .pagination-controls button:first-child,
+        .pagination-controls button:last-child {
+            width: auto;
+            border-radius: 20px;
+            padding: 0 15px;
+        }
+
+        .pagination-controls button:hover:not(:disabled) {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .pagination-controls button:disabled { 
+            color: #ccc; 
+            cursor: not-allowed; 
+            background: #f9f9f9;
+        }
+
+        .pagination-controls button.active { 
+            background-color: var(--primary-color); 
+            color: white; 
+            border-color: var(--primary-color); 
+            box-shadow: 0 4px 10px rgba(92, 184, 92, 0.3);
+        }
+
+        /* Loading & Empty States */
+        .status-msg {
+            text-align: center;
+            color: var(--text-light);
+            grid-column: 1 / -1;
+            padding: 40px;
+            background: white;
+            border-radius: var(--radius);
+        }
+
+    </style>
+</head>
+<body>
+
+<header class="topo">
+    <a href="#" id="logo-link" class="logo-link">
+        <i class="fa-solid fa-utensils"></i> <div class="logo">AlimCheck</div>
+    </a>
+    <nav class="menu" id="nav-menu"></nav>
+</header>
+
+<div class="hero-bg">
+    <div class="hero-content">
+        <h1 id="welcome-title">O irá avaliar hoje?</h1>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Busque por restaurante, prato ou categoria..." />
+            <button type="button" id="searchButton">
+                <i class="fa-solid fa-magnifying-glass"></i> Buscar
+            </button>
+        </div>
+    </div>
+</div>
+
+<main class="explorar-container">
+    <section class="secao">
+        <div class="secao-titulo">
+            <i class="fa-solid fa-tags" style="color: var(--primary-color);"></i>
+            <h2>Categorias</h2>
+        </div>
+        <div id="categoryFilters" class="filters-container"></div>
+    </section>
+
+    <section class="secao">
+        <div class="secao-titulo">
+            <i class="fa-solid fa-store" style="color: var(--primary-color);"></i>
+            <h2>Estabelecimentos</h2>
+        </div>
+        <div class="grid-cards" id="gridEstabelecimentos">
+            <div class="status-msg"><i class="fa-solid fa-spinner fa-spin"></i> Carregando delícias...</div>
+        </div>
+        <div id="pagination-controls" class="pagination-controls"></div>
+    </section>
+</main>
+
+<script>
+    const API_BASE_URL = 'http://localhost:3000';
+    let currentCategoryFilter = '';
+
+    function logout() {
+        localStorage.removeItem('usuario');
+        localStorage.removeItem('token');
+        window.location.href = 'index.html';
+    }
+
+    function pesquisar() {
+        const termo = document.getElementById('searchInput').value;
+        if(termo) window.location.href = `pesquisar-estabelecimentos.html?pesquisa=${encodeURIComponent(termo)}`;
+    }
+
+    function criarCard(estab) {
+        // Tenta usar a imagem da API, senão usa um placeholder de comida bonito
+        const imageUrl = estab.imagem ? `${API_BASE_URL}${estab.imagem}` : `https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60`;
+        
+        const cardLink = document.createElement('a');
+        cardLink.href = `estabelecimento-detalhes.html?id=${estab.id}`;
+        cardLink.className = 'card-link';
+        
+        const notaMedia = estab.nota_media ? parseFloat(estab.nota_media) : 0;
+        const totalAvaliacoes = estab.total_avaliacoes || 0;
+        const ratingPercent = (notaMedia / 5) * 100;
+        const notaFormatada = notaMedia > 0 ? notaMedia.toFixed(1) : '-';
+        const textoAvaliacoes = totalAvaliacoes === 1 ? '1 avaliação' : `${totalAvaliacoes} avaliações`;
+        
+        cardLink.innerHTML = `
+            <div class="card-img-wrapper">
+                <img src="${imageUrl}" alt="${estab.nome}" loading="lazy">
+            </div>
+            <div class="card-info">
+                <span class="card-category">${estab.categoria || 'Geral'}</span>
+                <h3>${estab.nome}</h3>
+                <div class="rating-display">
+                    ${notaMedia > 0 ? `<span class="rating-score">${notaFormatada}</span>` : ''}
+                    <div class="stars" style="--rating: ${ratingPercent}%;"></div>
+                    <span class="rating-text">(${totalAvaliacoes})</span>
+                </div>
+            </div>
+        `;
+        return cardLink;
+    }
+    
+    function renderPagination(pagination) {
+        const { totalPages, currentPage } = pagination;
+        const container = document.getElementById('pagination-controls');
+        container.innerHTML = '';
+        if (totalPages <= 1) return;
+
+        const prevButton = document.createElement('button');
+        prevButton.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+        prevButton.title = "Anterior";
+        prevButton.disabled = currentPage === 1;
+        prevButton.onclick = () => carregarEstabelecimentos(currentCategoryFilter, currentPage - 1);
+        container.appendChild(prevButton);
+
+        // Lógica simplificada de paginação
+        for (let i = 1; i <= totalPages; i++) {
+            // Mostra a primeira, a última, a atual e as vizinhas
+            if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                if (i === currentPage) pageButton.classList.add('active');
+                pageButton.onclick = () => carregarEstabelecimentos(currentCategoryFilter, i);
+                container.appendChild(pageButton);
+            } else if (i === currentPage - 2 || i === currentPage + 2) {
+                const dots = document.createElement('span');
+                dots.textContent = '...';
+                dots.style.color = '#ccc';
+                container.appendChild(dots);
+            }
+        }
+
+        const nextButton = document.createElement('button');
+        nextButton.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+        nextButton.title = "Próxima";
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.onclick = () => carregarEstabelecimentos(currentCategoryFilter, currentPage + 1);
+        container.appendChild(nextButton);
+    }
+
+    async function carregarEstabelecimentos(categoria = '', page = 1) {
+        const container = document.getElementById('gridEstabelecimentos');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        // Efeito visual de recarregamento suave
+        container.style.opacity = '0.5';
+        
+        currentCategoryFilter = categoria;
+
+        const params = new URLSearchParams({ page });
+        if (categoria) params.append('categoria', categoria);
+        
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/estabelecimentos?${params.toString()}`);
+            const result = await response.json();
+            const estabelecimentos = result.data;
+
+            container.innerHTML = '';
+            container.style.opacity = '1';
+
+            if (estabelecimentos && estabelecimentos.length > 0) {
+                estabelecimentos.forEach(estab => container.appendChild(criarCard(estab)));
+                renderPagination(result.pagination);
+            } else {
+                container.innerHTML = `
+                    <div class="status-msg">
+                        <i class="fa-regular fa-face-frown-open" style="font-size: 2em; margin-bottom: 10px; display: block;"></i>
+                        Nenhum estabelecimento encontrado nesta categoria.
+                    </div>`;
+                paginationContainer.innerHTML = '';
+            }
+        } catch (erro) {
+            console.error('Erro ao carregar estabelecimentos:', erro);
+            container.style.opacity = '1';
+            container.innerHTML = `
+                <div class="status-msg" style="color: #dc3545;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Erro ao conectar com o servidor.
+                </div>`;
+        }
+    }
+    
+    async function carregarCategorias() {
+        const categoryFiltersContainer = document.getElementById('categoryFilters');
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/categorias`);
+            const categorias = await response.json();
+            categoryFiltersContainer.innerHTML = '';
+
+            const btnTodas = document.createElement('button');
+            btnTodas.className = 'filter-btn active';
+            btnTodas.textContent = 'Todas';
+            btnTodas.onclick = () => {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                btnTodas.classList.add('active');
+                carregarEstabelecimentos('', 1);
+            };
+            categoryFiltersContainer.appendChild(btnTodas);
+
+            categorias.forEach(cat => {
+                const button = document.createElement('button');
+                button.className = 'filter-btn';
+                // Adiciona ícone opcional se a categoria for comum
+                let iconHtml = ''; 
+                if(cat.nome.toLowerCase().includes('pizza')) iconHtml = '<i class="fa-solid fa-pizza-slice"></i> ';
+                else if(cat.nome.toLowerCase().includes('hamb')) iconHtml = '<i class="fa-solid fa-burger"></i> ';
+                
+                button.innerHTML = iconHtml + cat.nome;
+                button.onclick = () => {
+                    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    carregarEstabelecimentos(cat.nome, 1);
+                };
+                categoryFiltersContainer.appendChild(button);
+            });
+        } catch (error) {
+            console.error('Erro ao buscar categorias:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        const nav = document.getElementById('nav-menu');
+        const logoLink = document.getElementById('logo-link');
+        
+        if (!usuario) {
+            // Em desenvolvimento, você pode comentar o alert para testar o visual sem logar
+            // alert('Acesso negado.'); 
+            // window.location.href = 'login.html';
+            // return;
+        }
+
+        const nomeUsuario = usuario ? usuario.nome : 'Visitante';
+        document.getElementById('welcome-title').innerHTML = `Olá, <strong>${nomeUsuario}</strong>! <br>O que ira avaliar hoje?`;
+        
+        let homeUrl = 'menu-principal.html';
+        let navLinksHTML = '';
+        const userType = usuario ? usuario.tipo.toLowerCase() : 'cliente';
+        
+        // Definição dos links do menu
+        const linkPerfil = `<a href="perfil.html"><i class="fa-regular fa-user"></i> Perfil</a>`;
+        const linkSair = `<a href="#" onclick="logout()" style="color: #dc3545;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a>`;
+
+        if (userType === 'dono_estabelecimento') {
+            homeUrl = 'painel-dono.html';
+            navLinksHTML = `
+                ${linkPerfil}
+                <a href="meus-estabelecimentos.html">Meus Estabelecimentos</a>
+                ${linkSair}
+            `;
+        } else { // Cliente e Admin
+            navLinksHTML = `
+                ${linkPerfil}
+                <a href="minhas-avaliacoes.html">Avaliações</a>
+                <a href="ranking-estabelecimentos.html">Ranking</a>
+                ${linkSair}
+            `;
+        }
+        
+        nav.innerHTML = navLinksHTML;
+        
+        // Inserção lógica do botão de Admin
+        if (userType === 'admin') {
+            homeUrl = 'painel-admin.html';
+            const adminLink = document.createElement('a');
+            adminLink.href = 'painel-admin.html';
+            adminLink.innerHTML = '<i class="fa-solid fa-lock"></i> Painel Admin';
+            adminLink.className = 'btn-destaque'; // Classe especial para destacar
+            // Insere antes do botão Sair (último filho)
+            nav.insertBefore(adminLink, nav.lastElementChild);
+        }
+
+        logoLink.href = homeUrl;
+
+        document.getElementById('searchButton').addEventListener('click', pesquisar);
+        document.getElementById('searchInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') pesquisar();
+        });
+
+        carregarCategorias();
+        carregarEstabelecimentos();
+    });
+</script>
+
+</body>
+</html>

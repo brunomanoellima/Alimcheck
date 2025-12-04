@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes do Estabelecimento</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- Variáveis e Reset (Copiado da Identidade Visual) --- */
+        :root {
+            --primary-color: #5cb85c;
+            --primary-dark: #4cae4c;
+            --bg-body: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 15px rgba(0,0,0,0.1);
+            --radius: 12px;
+            --danger: #dc3545;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: var(--bg-body); 
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header / Navigation (Estilo Novo) --- */
+        .topo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 15px 5%; 
+            background: var(--white); 
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-link { 
+            text-decoration: none; 
+            color: var(--primary-color); 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topo .logo { 
+            font-size: 1.6em; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        .menu { display: flex; align-items: center; gap: 20px; }
+        
+        .menu a { 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.95em;
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            transition: all 0.3s ease; 
+        }
+
+        .menu a:hover { 
+            background: rgba(92, 184, 92, 0.1); 
+            color: var(--primary-color); 
+        }
+
+        /* --- Layout Principal --- */
+        .container { 
+            max-width: 1000px; /* Aumentei um pouco para ficar mais moderno */
+            margin: 2rem auto; 
+            padding: 0 20px 40px 20px; 
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* --- Card de Detalhes (Adaptado ao Estilo Novo) --- */
+        .detalhes-header { 
+            background-color: var(--white); 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow-md); 
+            overflow: hidden; 
+            margin-bottom: 2.5rem; 
+            border: none;
+        }
+
+        .detalhes-header img { 
+            width: 100%; 
+            height: 350px; /* Altura ajustada */
+            object-fit: cover; 
+            display: block; 
+        }
+
+        .detalhes-info { padding: 2rem; }
+
+        .detalhes-info h1 { 
+            margin: 0 0 0.5rem 0; 
+            font-size: 2.2rem; 
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .detalhes-info p { 
+            margin: 0.5rem 0; 
+            color: var(--text-light); 
+            font-size: 1.1rem; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- Botão Avaliar (Estilo Novo) --- */
+        .btn-avaliar { 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1.5rem; 
+            padding: 12px 30px; 
+            background: var(--primary-color); 
+            color: white; 
+            border: none; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 1rem; 
+            text-decoration: none; 
+            transition: background 0.2s;
+            box-shadow: 0 4px 10px rgba(92, 184, 92, 0.3);
+        }
+
+        .btn-avaliar:hover { 
+            background-color: var(--primary-dark); 
+            transform: translateY(-2px);
+        }
+
+        /* --- Seção de Avaliações --- */
+        .avaliacoes-section h2 { 
+            font-size: 1.8rem; 
+            padding-bottom: 0.75rem; 
+            margin-bottom: 1.5rem; 
+            color: var(--text-dark);
+            border-bottom: 2px solid rgba(92, 184, 92, 0.1);
+            display: inline-block;
+        }
+
+        /* --- Card de Avaliação (Adaptado ao Estilo Novo) --- */
+        .avaliacao-card { 
+            background-color: var(--white); 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow-sm); 
+            margin-bottom: 1.5rem; 
+            border: 1px solid transparent; 
+            padding: 1.5rem; 
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .avaliacao-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .usuario-info { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            margin-bottom: 1rem; 
+            font-weight: 600; 
+            color: var(--text-dark);
+        }
+
+        .avatar-avaliador { 
+            width: 45px; 
+            height: 45px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Estrelas */
+        .avaliacao-card .nota { 
+            font-size: 1rem; 
+            color: #ffc107; 
+            margin-bottom: 0.8rem; 
+            background: #fff3cd;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .avaliacao-card .comentario { 
+            color: var(--text-dark); 
+            line-height: 1.6; 
+            font-size: 1rem; 
+            padding-bottom: 1rem; 
+            border-bottom: 1px solid #f0f0f0; 
+            margin-top: 0;
+        }
+
+        .avaliacao-footer { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-top: 1rem; 
+        }
+
+        .data { 
+            font-size: 0.85rem; 
+            color: var(--text-light); 
+            font-weight: 500;
+        }
+
+        .btn-denunciar { 
+            background: none; 
+            border: none; 
+            color: var(--text-light); 
+            cursor: pointer; 
+            font-size: 0.85rem; 
+            padding: 5px 10px; 
+            font-family: 'Montserrat', sans-serif; 
+            border-radius: 4px;
+            transition: color 0.2s;
+        }
+
+        .btn-denunciar:hover { 
+            color: var(--danger); 
+            background: rgba(220, 53, 69, 0.1);
+            text-decoration: none; 
+        }
+
+        .resposta-dono { 
+            margin-top: 1.5rem; 
+            padding: 1rem 1.5rem; 
+            background-color: #f8f9fa; 
+            border-radius: 8px; 
+            border-left: 4px solid var(--primary-color); 
+        }
+
+        .resposta-dono p { margin: 0; line-height: 1.5; color: var(--text-dark); }
+        .resposta-dono strong { color: var(--primary-color); display: block; margin-bottom: 5px; }
+
+        .empty-message { 
+            text-align: center; 
+            padding: 3rem; 
+            background-color: var(--white); 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow-sm); 
+            color: var(--text-light); 
+            font-size: 1.1rem; 
+        }
+
+        /* --- Paginação (Copiado do Estilo Novo) --- */
+        .pagination-controls { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 8px; 
+            margin-top: 2.5rem; 
+            flex-wrap: wrap; 
+        }
+
+        .pagination-controls button { 
+            background-color: white; 
+            border: 1px solid #ddd; 
+            color: var(--text-dark); 
+            padding: 8px 16px; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: all 0.2s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .pagination-controls button:hover:not(:disabled) { 
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .pagination-controls button:disabled { 
+            color: #ccc; 
+            cursor: not-allowed; 
+            background: #f9f9f9;
+        }
+
+        .pagination-controls button.active { 
+            background-color: var(--primary-color); 
+            color: white; 
+            border-color: var(--primary-color); 
+            box-shadow: 0 4px 10px rgba(92, 184, 92, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    (function() { const usuario = JSON.parse(localStorage.getItem('usuario')); if (!usuario) { alert('Você precisa estar logado para ver os detalhes.'); window.location.href = 'login.html'; } })();
+</script>
+
+<header class="topo">
+    <a href="#" id="logo-link" class="logo-link">
+        <i class="fa-solid fa-utensils"></i> <div class="logo">AlimCheck</div>
+    </a>
+    <nav class="menu" id="nav-menu"></nav>
+</header>
+
+<main class="container">
+    <div class="detalhes-header">
+        <img id="detalhe-imagem" src="" alt="Foto do estabelecimento">
+        <div class="detalhes-info">
+            <h1 id="detalhe-nome">Carregando...</h1>
+            <p id="detalhe-categoria"><i class="fa-solid fa-tag"></i> <span>...</span></p>
+            <p id="detalhe-endereco"><i class="fa-solid fa-location-dot"></i> <span>...</span></p>
+            <a id="btn-avaliar" href="#" class="btn-avaliar" style="display: none;">
+                <i class="fa-regular fa-star"></i> Fazer uma Avaliação
+            </a>
+        </div>
+    </div>
+
+    <div class="avaliacoes-section">
+        <h2><i class="fa-solid fa-comments" style="color: var(--primary-color); margin-right: 10px;"></i>Avaliações</h2>
+        <div id="lista-avaliacoes"><p>Carregando...</p></div>
+        <div id="pagination-controls" class="pagination-controls"></div>
+    </div>
+</main>
+    
+<script>
+    const API_BASE_URL = 'http://localhost:3000';
+    
+    function logout() {
+        localStorage.removeItem('usuario');
+        localStorage.removeItem('token');
+        window.location.href = 'index.html';
+    }
+
+    async function carregarDetalhesEstabelecimento(id, usuario) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/estabelecimentos/${id}`);
+            if (!response.ok) throw new Error('Estabelecimento não encontrado');
+            const est = await response.json();
+
+            document.title = `${est.nome} - Detalhes`;
+            document.getElementById('detalhe-nome').textContent = est.nome;
+            
+            // Pequeno ajuste apenas para manter o ícone na frente do texto, 
+            // já que o CSS espera estrutura flex
+            document.querySelector('#detalhe-categoria span').textContent = est.categoria;
+            document.querySelector('#detalhe-endereco span').textContent = est.endereco;
+
+            document.getElementById('detalhe-imagem').src = est.imagem ? `${API_BASE_URL}${est.imagem}` : `https://picsum.photos/seed/${est.id}/1000/400`;
+            
+            const btnAvaliar = document.getElementById('btn-avaliar');
+            if (usuario.tipo.toLowerCase() === 'cliente') {
+                btnAvaliar.href = `avaliar.html?id=${est.id}`;
+                btnAvaliar.style.display = 'inline-flex'; // Ajustado para flex por causa do ícone
+            }
+        } catch (error) {
+            console.error('Erro ao carregar detalhes:', error);
+            document.querySelector('.container').innerHTML = '<div class="empty-message"><h1>Estabelecimento não encontrado</h1><p>O estabelecimento que você procura não existe ou foi removido.</p></div>';
+        }
+    }
+
+    // ATUALIZADO: Função agora aceita um número de página
+    async function carregarAvaliacoes(id, page = 1) {
+        const container = document.getElementById('lista-avaliacoes');
+        const paginationContainer = document.getElementById('pagination-controls');
+        container.innerHTML = '<p style="text-align:center; color: var(--text-light);">Carregando avaliações...</p>';
+        paginationContainer.innerHTML = '';
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/avaliacoes?estabelecimentoId=${id}&page=${page}`);
+            const result = await response.json();
+            const avaliacoes = result.data;
+            
+            container.innerHTML = '';
+            if (avaliacoes.length > 0) {
+                avaliacoes.forEach(av => {
+                    const card = document.createElement('div');
+                    card.className = 'avaliacao-card';
+                    const dataFormatada = new Date(av.created_at).toLocaleDateString('pt-BR');
+                    const avatarSrc = av.avatarUsuario ? `${API_BASE_URL}${av.avatarUsuario}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(av.nomeUsuario || 'A')}&background=5cb85c&color=fff&size=40`;
+                    const respostaDonoHtml = av.resposta_dono ? `<div class="resposta-dono"><p><strong>Resposta do Estabelecimento:</strong></p><p>${av.resposta_dono}</p></div>` : '';
+
+                    card.innerHTML = `
+                        <div class="usuario-info">
+                            <img src="${avatarSrc}" alt="Avatar de ${av.nomeUsuario}" class="avatar-avaliador">
+                            <span>${av.nomeUsuario || 'Usuário Anônimo'}</span>
+                        </div>
+                        <div class="nota">${'★'.repeat(av.nota)}${'☆'.repeat(5 - av.nota)}</div>
+                        <p class="comentario">"${av.comentario || 'Nenhum comentário.'}"</p>
+                        <div class="avaliacao-footer">
+                            <span class="data"><i class="fa-regular fa-calendar"></i> ${dataFormatada}</span>
+                            <button class="btn-denunciar" data-id="${av.id}"><i class="fa-regular fa-flag"></i> Denunciar</button>
+                        </div>
+                        ${respostaDonoHtml}
+                    `;
+                    container.appendChild(card);
+                });
+                renderPagination(result.pagination, id);
+            } else {
+                container.innerHTML = '<p class="empty-message"><i class="fa-regular fa-comment-dots" style="font-size: 2rem; display:block; margin-bottom:10px;"></i>Este estabelecimento ainda não tem avaliações. Seja o primeiro a avaliar!</p>';
+            }
+        } catch (error) {
+            console.error('Erro ao carregar avaliações:', error);
+            container.innerHTML = '<p class="empty-message">Não foi possível carregar as avaliações.</p>';
+        }
+    }
+
+    // NOVO: Função para renderizar os botões de paginação
+    function renderPagination(pagination, estabelecimentoId) {
+        const { totalPages, currentPage } = pagination;
+        const container = document.getElementById('pagination-controls');
+        container.innerHTML = '';
+        if (totalPages <= 1) return;
+
+        const prevButton = document.createElement('button');
+        prevButton.innerHTML = '<i class="fa-solid fa-chevron-left"></i> Anterior';
+        prevButton.disabled = currentPage === 1;
+        prevButton.onclick = () => carregarAvaliacoes(estabelecimentoId, currentPage - 1);
+        container.appendChild(prevButton);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i;
+            if (i === currentPage) pageButton.classList.add('active');
+            pageButton.onclick = () => carregarAvaliacoes(estabelecimentoId, i);
+            container.appendChild(pageButton);
+        }
+
+        const nextButton = document.createElement('button');
+        nextButton.innerHTML = 'Próxima <i class="fa-solid fa-chevron-right"></i>';
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.onclick = () => carregarAvaliacoes(estabelecimentoId, currentPage + 1);
+        container.appendChild(nextButton);
+    }
+
+    async function denunciarAvaliacao(avaliacaoId) {
+        if (!confirm('Tem certeza que deseja denunciar esta avaliação como inadequada?')) return;
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/denuncias`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ avaliacao_id: avaliacaoId })
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error);
+            alert(result.message);
+        } catch (error) {
+            alert(`Erro: ${error.message}`);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const navMenu = document.getElementById('nav-menu');
+        const logoLink = document.getElementById('logo-link');
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        
+        let homeUrl = 'index.html';
+        let navLinksHTML = `<a href="login.html">Entrar</a>`;
+        if (usuario) {
+            const userType = usuario.tipo.toLowerCase();
+            if (userType === 'admin') {
+                homeUrl = 'painel-admin.html';
+                navLinksHTML = `<a href="perfil.html">Perfil</a><a href="#" onclick="logout()" style="color: var(--danger);">Sair</a>`;
+            } else if (userType === 'dono_estabelecimento') {
+                homeUrl = 'painel-dono.html';
+                navLinksHTML = `<a href="perfil.html">Perfil</a><a href="painel-dono.html">Painel</a><a href="#" onclick="logout()" style="color: var(--danger);">Sair</a>`;
+            } else {
+                homeUrl = 'menu-principal.html';
+                navLinksHTML = `<a href="perfil.html">Perfil</a><a href="minhas-avaliacoes.html">Minhas Avaliações</a><a href="ranking-estabelecimentos.html">Ranking</a><a href="#" onclick="logout()" style="color: var(--danger);">Sair</a>`;
+            }
+        }
+        navMenu.innerHTML = navLinksHTML;
+        logoLink.href = homeUrl;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const estabelecimentoId = urlParams.get('id');
+
+        if (estabelecimentoId) {
+            carregarDetalhesEstabelecimento(estabelecimentoId, usuario);
+            carregarAvaliacoes(estabelecimentoId, 1); // Inicia na página 1
+        } else {
+            document.querySelector('.container').innerHTML = '<div class="empty-message"><h1>Erro</h1><p>Nenhum estabelecimento foi especificado.</p></div>';
+        }
+
+        document.getElementById('lista-avaliacoes').addEventListener('click', (e) => {
+            // Ajuste para pegar o clique também no ícone dentro do botão
+            const btn = e.target.closest('.btn-denunciar');
+            if (btn) {
+                denunciarAvaliacao(btn.dataset.id);
+            }
+        });
+    });
+</script>
+</body>
+</html>

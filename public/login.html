@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Entrar - AlimCheck</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #5cb85c;
+            --primary-dark: #4cae4c;
+            --bg-body: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+            --radius: 16px;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background-color: var(--bg-body);
+            background-image: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            display: flex;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            min-height: 550px;
+        }
+
+        /* Lado Esquerdo (Imagem/Info) */
+        .auth-info {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .auth-info h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 15px; }
+        .auth-info p { font-size: 1.1rem; opacity: 0.9; line-height: 1.6; }
+        .auth-info .brand-icon { font-size: 4rem; margin-bottom: 20px; }
+
+        .btn-outline {
+            margin-top: 30px;
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .btn-outline:hover { background: white; color: var(--primary-color); }
+
+        /* Lado Direito (Formulário) */
+        .auth-form-wrapper {
+            flex: 1.2;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header { text-align: center; margin-bottom: 30px; }
+        .form-header h1 { font-size: 1.8rem; color: var(--text-dark); margin: 0; font-weight: 700; }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ccc;
+            transition: color 0.3s;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+            transition: border-color 0.3s;
+            outline: none;
+        }
+
+        .form-control:focus { border-color: var(--primary-color); }
+        .form-control:focus + i { color: var(--primary-color); }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        .form-footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
+        .form-footer a:hover { text-decoration: underline; }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .auth-container { flex-direction: column; max-width: 500px; }
+            .auth-info { padding: 30px; min-height: 150px; }
+            .auth-info h2 { font-size: 1.8rem; }
+            .auth-form-wrapper { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-container">
+    <div class="auth-info">
+        <i class="fa-solid fa-utensils brand-icon"></i>
+        <h2>Bem-vindo de volta!</h2>
+        <p>Acesse sua conta para avaliar, gerenciar ou descobrir novos sabores.</p>
+        <a href="index.html" class="btn-outline">Voltar para Home</a>
+    </div>
+
+    <div class="auth-form-wrapper">
+        <div class="form-header">
+            <h1>Login</h1>
+            <p style="font-size: 0.9rem; color: #999;">Entre com suas credenciais</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="email" id="email" class="form-control" placeholder="Seu E-mail" required>
+                <i class="fa-regular fa-envelope"></i>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="senha" class="form-control" placeholder="Sua Senha" required>
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <button type="submit" class="btn-submit">Entrar</button>
+        </form>
+
+        <div class="form-footer">
+            <p>Não tem conta? <a href="cadastro.html">Cadastre-se</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_BASE_URL = 'http://localhost:3000';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginForm = document.getElementById('loginForm');
+
+        if (!loginForm) return;
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.querySelector('.btn-submit');
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Entrando...';
+
+            const email = document.getElementById('email').value.trim();
+            const senha = document.getElementById('senha').value.trim();
+
+            if (!email || !senha) {
+                alert('Preencha todos os campos!');
+                btn.disabled = false; btn.innerText = originalText;
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, senha })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('usuario', JSON.stringify(data.usuario));
+
+                    const tipo = data.usuario.tipo.toLowerCase(); 
+                    
+                    // Feedback visual
+                    btn.style.backgroundColor = '#28a745';
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Sucesso!';
+
+                    setTimeout(() => {
+                        switch (tipo) {
+                            case 'cliente':
+                                window.location.href = 'menu-principal.html';
+                                break;
+                            case 'dono_estabelecimento':
+                                window.location.href = 'painel-dono.html';
+                                break;
+                            case 'admin':
+                                window.location.href = 'painel-admin.html';
+                                break;
+                            default:
+                                alert('Tipo de usuário desconhecido.');
+                                window.location.href = 'index.html';
+                        }
+                    }, 500);
+                } else {
+                    alert('Erro: ' + (data.erro || 'Verifique suas credenciais.'));
+                    btn.disabled = false; btn.innerText = originalText;
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Erro de conexão. Tente novamente.');
+                btn.disabled = false; btn.innerText = originalText;
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

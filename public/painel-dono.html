@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel do Parceiro - AlimCheck</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #5cb85c;
+            --primary-dark: #4cae4c;
+            --bg-body: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 16px;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: var(--bg-body); 
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .topo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 15px 5%; 
+            background: var(--white); 
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-link { 
+            text-decoration: none; 
+            color: var(--primary-color); 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topo .logo { 
+            font-size: 1.6em; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        .menu { display: flex; align-items: center; gap: 15px; }
+        
+        .menu a { 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.9em;
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            transition: all 0.3s ease; 
+        }
+
+        .menu a:hover { 
+            background: rgba(92, 184, 92, 0.1); 
+            color: var(--primary-color); 
+        }
+
+        .menu a.btn-sair { color: #dc3545; }
+        .menu a.btn-sair:hover { background-color: #ffeaea; }
+
+        /* --- Dashboard Container --- */
+        .panel-container { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 60px 20px; 
+            flex-grow: 1;
+        }
+
+        .panel-box { 
+            background-color: var(--white); 
+            padding: 50px; 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow-md); 
+            max-width: 1000px; 
+            width: 100%; 
+            text-align: center; 
+        }
+
+        .panel-header {
+            margin-bottom: 40px;
+        }
+
+        .panel-header h1 { 
+            font-size: 2.2rem; 
+            margin: 0; 
+            font-weight: 800; 
+            color: var(--text-dark);
+        }
+        
+        .panel-header p {
+            color: var(--text-light);
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* --- Grid de Opções --- */
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 30px; 
+        }
+
+        .dashboard-card { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 40px 20px; 
+            border-radius: var(--radius); 
+            text-decoration: none; 
+            color: var(--text-dark); 
+            background-color: #fcfcfc; 
+            box-shadow: var(--shadow-sm); 
+            transition: all 0.3s ease; 
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: var(--shadow-md); 
+            border-color: var(--primary-color);
+            background-color: white;
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e8f5e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            transition: background 0.3s;
+        }
+
+        .dashboard-card:hover .icon-circle {
+            background-color: var(--primary-color);
+        }
+
+        .dashboard-card i { 
+            font-size: 2.5rem; 
+            color: var(--primary-color); 
+            transition: color 0.3s;
+        }
+
+        .dashboard-card:hover i {
+            color: white;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Cores Específicas (Opcional) */
+        .card-ranking:hover { border-color: #ffc107; }
+        .card-ranking:hover .icon-circle { background-color: #ffc107; }
+        .card-ranking i { color: #ffc107; }
+        .card-ranking .icon-circle { background-color: #fff9db; }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #aaa;
+            font-size: 0.85em;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    (function() {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario || usuario.tipo.toLowerCase() !== 'dono_estabelecimento') {
+            // window.location.href = 'login.html'; 
+            console.warn('Redirecionar Auth Guard');
+        }
+    })();
+</script>
+
+<header class="topo">
+    <a href="painel-dono.html" class="logo-link">
+        <i class="fa-solid fa-utensils"></i>
+        <div class="logo">AlimCheck</div>
+    </a>
+    <nav class="menu">
+        <a href="perfil.html"><i class="fa-regular fa-user"></i> Meu Perfil</a>
+        <a href="#" onclick="logout()" class="btn-sair"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a>
+    </nav>
+</header>
+
+<main class="panel-container">
+    <div class="panel-box">
+        <div class="panel-header">
+            <h1 id="welcomeMessage">Olá, Parceiro!</h1>
+            <p>Gerencie seus estabelecimentos e acompanhe o desempenho.</p>
+        </div>
+        
+        <div class="grid-container">
+            <a href="meus-estabelecimentos.html" class="dashboard-card">
+                <div class="icon-circle"><i class="fa-solid fa-store"></i></div>
+                <div class="card-title">Meus Locais</div>
+                <div class="card-desc">Gerencie suas lojas e cardápios</div>
+            </a>
+            
+            <a href="ranking-estabelecimentos.html" class="dashboard-card card-ranking">
+                <div class="icon-circle"><i class="fa-solid fa-trophy"></i></div>
+                <div class="card-title">Ranking Geral</div>
+                <div class="card-desc">Veja como você está posicionado</div>
+            </a>
+            
+            <a href="cadastro-estabelecimento.html" class="dashboard-card">
+                <div class="icon-circle"><i class="fa-solid fa-plus"></i></div>
+                <div class="card-title">Novo Local</div>
+                <div class="card-desc">Cadastre um novo estabelecimento</div>
+            </a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2025 AlimCheck. Painel do Parceiro.</p>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (usuario && usuario.nome) {
+            const primeiroNome = usuario.nome.split(' ')[0];
+            document.getElementById('welcomeMessage').innerHTML = `Olá, <strong>${primeiroNome}</strong>!`;
+        }
+    });
+
+    function logout() {
+        if (confirm('Deseja realmente sair?')) {
+            localStorage.removeItem('usuario');
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        }
+    }
+</script>
+
+</body>
+</html>

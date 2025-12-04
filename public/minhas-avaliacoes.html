@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Minhas Avaliações - AlimCheck</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #5cb85c;
+            --primary-dark: #4cae4c;
+            --bg-body: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 15px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: var(--bg-body); 
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header / Navigation --- */
+        .topo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 15px 5%; 
+            background: var(--white); 
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-link { 
+            text-decoration: none; 
+            color: var(--primary-color); 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topo .logo { 
+            font-size: 1.6em; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        .menu { display: flex; align-items: center; gap: 15px; }
+        
+        .menu a { 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.9em;
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            transition: all 0.3s ease; 
+        }
+
+        .menu a:hover { 
+            background: rgba(92, 184, 92, 0.1); 
+            color: var(--primary-color); 
+        }
+        
+        .menu a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .menu a.btn-sair {
+            color: #dc3545;
+        }
+        .menu a.btn-sair:hover {
+            background-color: #ffeaea;
+        }
+
+        /* --- Main Layout --- */
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            width: 100%;
+            box-sizing: border-box;
+            flex-grow: 1;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-header h1 { 
+            font-size: 1.8em; 
+            margin: 0; 
+            font-weight: 700; 
+            color: var(--text-dark);
+        }
+
+        /* --- Grid & Cards --- */
+        .grid-cards { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 25px; 
+        }
+
+        .card-link { 
+            text-decoration: none; 
+            color: inherit; 
+            display: flex; 
+            flex-direction: column; 
+            background-color: white; 
+            border-radius: 16px; 
+            overflow: hidden; 
+            box-shadow: var(--shadow-sm); 
+            transition: all 0.3s ease; 
+            border: 1px solid transparent;
+            height: 100%;
+        }
+
+        .card-link:hover { 
+            transform: translateY(-5px); 
+            box-shadow: var(--shadow-md); 
+            border-color: rgba(92, 184, 92, 0.3);
+        }
+
+        .card-img-wrapper {
+            height: 160px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-link img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.5s ease;
+        }
+
+        .card-link:hover img {
+            transform: scale(1.05);
+        }
+
+        .card-info { 
+            padding: 20px; 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .card-info h3 { 
+            margin: 0 0 10px 0; 
+            font-size: 1.2em; 
+            font-weight: 700; 
+            color: var(--text-dark);
+        }
+
+        /* Estilo do Comentário */
+        .comentario-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            padding: 12px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+            font-style: italic;
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+        
+        .comentario-box i {
+            color: #ccc;
+            margin-right: 5px;
+        }
+
+        .card-footer { 
+            font-size: 0.8em; 
+            color: #999; 
+            margin-top: auto; 
+            padding-top: 15px; 
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Estrelas */
+        .rating-display { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+
+        .stars { 
+            display: inline-block; 
+            font-size: 0; 
+            position: relative; 
+        }
+
+        .stars::before { 
+            content: '\f005 \f005 \f005 \f005 \f005'; 
+            font-family: 'Font Awesome 6 Free'; 
+            font-weight: 900;
+            font-size: 14px; 
+            color: #e0e0e0; 
+        }
+
+        .stars::after { 
+            content: '\f005 \f005 \f005 \f005 \f005'; 
+            font-family: 'Font Awesome 6 Free'; 
+            font-weight: 900;
+            font-size: 14px; 
+            color: #ffc107; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            width: var(--rating); 
+        }
+
+        /* Estados vazios e loading */
+        .empty-message { 
+            grid-column: 1 / -1;
+            text-align: center; 
+            padding: 4rem 2rem; 
+            background-color: #fff; 
+            border-radius: 16px; 
+            color: var(--text-light); 
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: #e0e0e0;
+            margin-bottom: 10px;
+        }
+
+        .btn-explorar {
+            margin-top: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .btn-explorar:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Paginação */
+        .pagination-controls { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 8px; 
+            margin-top: 3rem; 
+        }
+
+        .pagination-controls button { 
+            background-color: white; 
+            border: 1px solid #ddd; 
+            color: var(--text-dark); 
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer; 
+            font-weight: 600; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .pagination-controls button:first-child,
+        .pagination-controls button:last-child {
+            width: auto;
+            border-radius: 20px;
+            padding: 0 15px;
+        }
+
+        .pagination-controls button:hover:not(:disabled) {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .pagination-controls button.active { 
+            background-color: var(--primary-color); 
+            color: white; 
+            border-color: var(--primary-color); 
+            box-shadow: 0 4px 10px rgba(92, 184, 92, 0.3);
+        }
+        
+        .pagination-controls button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    // Verificação de segurança imediata para evitar flash de conteúdo
+    (function() {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario || usuario.tipo.toLowerCase() !== 'cliente') {
+            // Em produção: window.location.href = 'login.html';
+            console.warn("Redirecionar para login: Usuário não autenticado ou não é cliente.");
+        }
+    })();
+</script>
+
+<header class="topo">
+    <a href="menu-principal.html" class="logo-link">
+        <i class="fa-solid fa-utensils"></i>
+        <div class="logo">AlimCheck</div>
+    </a>
+    <nav class="menu">
+        <a href="menu-principal.html"><i class="fa-solid fa-house"></i> Início</a>
+        <a href="perfil.html" class="active"><i class="fa-solid fa-user"></i> Perfil</a>
+        <a href="#" onclick="logout()" class="btn-sair"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+    </nav>
+</header>
+
+<main class="container">
+    <div class="page-header">
+        <i class="fa-solid fa-star" style="color: var(--primary-color); font-size: 1.5em;"></i>
+        <h1>Minhas Avaliações</h1>
+    </div>
+
+    <div class="grid-cards" id="lista-avaliacoes">
+        <div class="empty-message">
+            <i class="fa-solid fa-spinner fa-spin empty-icon"></i>
+            <p>Carregando suas avaliações...</p>
+        </div>
+    </div>
+    
+    <div id="pagination-controls" class="pagination-controls"></div>
+</main>
+
+<script>
+    const API_BASE_URL = 'http://localhost:3000';
+
+    function logout() {
+        localStorage.removeItem('usuario');
+        localStorage.removeItem('token');
+        window.location.href = 'login.html'; // Ajuste conforme sua rota de login
+    }
+
+    function renderPagination(pagination, usuarioId) {
+        const { totalPages, currentPage } = pagination;
+        const container = document.getElementById('pagination-controls');
+        container.innerHTML = '';
+        if (totalPages <= 1) return;
+
+        const prevButton = document.createElement('button');
+        prevButton.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+        prevButton.disabled = currentPage === 1;
+        prevButton.onclick = () => carregarAvaliacoes(usuarioId, currentPage - 1);
+        container.appendChild(prevButton);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i;
+            if (i === currentPage) pageButton.classList.add('active');
+            pageButton.onclick = () => carregarAvaliacoes(usuarioId, i);
+            container.appendChild(pageButton);
+        }
+
+        const nextButton = document.createElement('button');
+        nextButton.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.onclick = () => carregarAvaliacoes(usuarioId, currentPage + 1);
+        container.appendChild(nextButton);
+    }
+
+    async function carregarAvaliacoes(usuarioId, page = 1) {
+        const container = document.getElementById('lista-avaliacoes');
+        const paginationContainer = document.getElementById('pagination-controls');
+        
+        // Efeito visual de recarregamento suave
+        if(page > 1) container.style.opacity = '0.5';
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/avaliacoes?usuarioId=${usuarioId}&page=${page}`);
+            const result = await res.json();
+            const avaliacoes = result.data;
+
+            container.style.opacity = '1';
+            container.innerHTML = '';
+            
+            if (res.ok && avaliacoes && avaliacoes.length > 0) {
+                avaliacoes.forEach(av => {
+                    // Fallback para imagem
+                    const imageUrl = av.imagemEstabelecimento ? `${API_BASE_URL}${av.imagemEstabelecimento}` : `https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60`;
+                    
+                    const cardLink = document.createElement('a');
+                    cardLink.href = `estabelecimento-detalhes.html?id=${av.estabelecimento_id}`;
+                    cardLink.className = 'card-link';
+                    
+                    const ratingPercent = (av.nota / 5) * 100;
+                    const dataFormatada = new Date(av.created_at).toLocaleDateString('pt-BR');
+                    
+                    // Texto do comentário truncado se for muito longo
+                    const comentarioTexto = av.comentario || 'Sem comentário escrito.';
+
+                    cardLink.innerHTML = `
+                        <div class="card-img-wrapper">
+                            <img src="${imageUrl}" alt="Foto de ${av.nomeEstabelecimento}">
+                        </div>
+                        <div class="card-info">
+                            <h3>${av.nomeEstabelecimento || 'Estabelecimento'}</h3>
+                            <div class="rating-display">
+                                <div class="stars" style="--rating: ${ratingPercent}%;"></div>
+                                <span style="font-weight: 600; color: #f1c40f;">${av.nota.toFixed(1)}</span>
+                            </div>
+                            
+                            <div class="comentario-box">
+                                <i class="fa-solid fa-quote-left"></i> ${comentarioTexto}
+                            </div>
+                            
+                            <div class="card-footer">
+                                <span><i class="fa-regular fa-calendar"></i> ${dataFormatada}</span>
+                                <span>Ver detalhes <i class="fa-solid fa-arrow-right" style="font-size: 0.8em;"></i></span>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(cardLink);
+                });
+                renderPagination(result.pagination, usuarioId);
+            } else {
+                container.innerHTML = `
+                    <div class="empty-message">
+                        <i class="fa-regular fa-folder-open empty-icon"></i>
+                        <p>Você ainda não avaliou nenhum local.</p>
+                        <a href="menu-principal.html" class="btn-explorar">Explorar Restaurantes</a>
+                    </div>`;
+            }
+        } catch (error) {
+            console.error(error);
+            container.innerHTML = `
+                <div class="empty-message" style="color: #dc3545;">
+                    <i class="fa-solid fa-triangle-exclamation empty-icon" style="color: #dc3545;"></i>
+                    <p>Erro ao carregar suas avaliações. O servidor pode estar offline.</p>
+                </div>`;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (usuario && usuario.id) {
+            carregarAvaliacoes(usuario.id, 1);
+        } else {
+            // Caso não tenha usuário no localStorage (já tratado no script do head, mas por segurança)
+             document.getElementById('lista-avaliacoes').innerHTML = `
+                <div class="empty-message">
+                    <p>Sessão expirada. Por favor, faça login.</p>
+                    <a href="login.html" class="btn-explorar">Entrar</a>
+                </div>`;
+        }
+    });
+</script>
+
+</body>
+</html>

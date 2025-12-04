@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Estabelecimento - AlimCheck</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #5cb85c;
+            --primary-dark: #4cae4c;
+            --bg-body: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 16px;
+            --border-color: #e0e0e0;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: var(--bg-body); 
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .topo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 15px 5%; 
+            background: var(--white); 
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-link { 
+            text-decoration: none; 
+            color: var(--primary-color); 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topo .logo { 
+            font-size: 1.6em; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        .menu { display: flex; align-items: center; gap: 15px; }
+        
+        .menu a { 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.9em;
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            transition: all 0.3s ease; 
+        }
+
+        .menu a:hover { 
+            background: rgba(92, 184, 92, 0.1); 
+            color: var(--primary-color); 
+        }
+
+        .menu a.btn-sair { color: #dc3545; }
+        .menu a.btn-sair:hover { background-color: #ffeaea; }
+
+        /* --- Form Container --- */
+        .main-container { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 40px 20px; 
+            flex-grow: 1;
+        }
+
+        .form-card { 
+            background: white; 
+            max-width: 500px; 
+            width: 100%; 
+            padding: 40px; 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow-md); 
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+        }
+
+        .header-form {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header-form h1 { 
+            margin: 0; 
+            font-size: 1.6rem; 
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        /* --- Image Preview Area --- */
+        .image-preview-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            background-color: #eee;
+            border: 2px solid var(--border-color);
+        }
+
+        .image-preview { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: opacity 0.3s;
+        }
+
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            text-align: center;
+            opacity: 0; /* Invisível por padrão */
+            transition: opacity 0.2s;
+        }
+
+        .image-preview-container:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .btn-change-image {
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Esconde o input file original */
+        input[type="file"] {
+            display: none;
+        }
+
+        /* --- Form Inputs --- */
+        .form-group { margin-bottom: 20px; text-align: left; }
+
+        .form-group label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .form-control { 
+            width: 100%; 
+            padding: 12px 15px; 
+            border-radius: 8px; 
+            border: 2px solid var(--border-color); 
+            font-size: 1rem; 
+            box-sizing: border-box; 
+            font-family: 'Montserrat', sans-serif; 
+            transition: border-color 0.3s;
+            outline: none;
+        }
+
+        .form-control:focus { border-color: var(--primary-color); }
+        .form-control:disabled { background-color: #e9ecef; }
+
+        /* --- Buttons --- */
+        .btn-submit { 
+            width: 100%; 
+            padding: 14px; 
+            background: var(--primary-color); 
+            color: white; 
+            border: none; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: 700; 
+            font-size: 1rem; 
+            transition: all 0.2s; 
+            box-shadow: 0 4px 10px rgba(92, 184, 92, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover { 
+            background-color: var(--primary-dark); 
+            transform: translateY(-2px);
+        }
+        
+        .btn-submit:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-cancel {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .btn-cancel:hover { color: var(--text-dark); }
+
+        /* Loading Overlay */
+        #loading-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    (function() {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario || usuario.tipo.toLowerCase() !== 'dono_estabelecimento') {
+            // window.location.href = 'login.html'; 
+            console.warn('Redirecionar Auth Guard');
+        }
+    })();
+</script>
+
+<header class="topo">
+    <a href="painel-dono.html" class="logo-link">
+        <i class="fa-solid fa-utensils"></i>
+        <div class="logo">AlimCheck</div>
+    </a>
+    <nav class="menu">
+        <a href="painel-dono.html"><i class="fa-solid fa-chart-line"></i> Painel</a>
+        <a href="meus-estabelecimentos.html"><i class="fa-solid fa-store"></i> Meus Locais</a>
+        <a href="#" onclick="logout()" class="btn-sair"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a>
+    </nav>
+</header>
+
+<main class="main-container">
+    <div class="form-card">
+        <div id="loading-overlay">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size: 2em; color: var(--primary-color); margin-bottom: 10px;"></i>
+            <p>Carregando dados...</p>
+        </div>
+
+        <div class="header-form">
+            <h1><i class="fa-solid fa-pen-to-square" style="color: var(--primary-color);"></i> Editar Estabelecimento</h1>
+        </div>
+
+        <form id="formEditarEstabelecimento">
+            
+            <div class="image-preview-container">
+                <img src="" alt="Imagem do local" id="image-preview" class="image-preview">
+                <div class="image-overlay">
+                    <label for="imagem" class="btn-change-image">
+                        <i class="fa-solid fa-camera"></i> Alterar Foto
+                    </label>
+                </div>
+            </div>
+            <input type="file" id="imagem" name="imagem" accept="image/png, image/jpeg">
+
+            <div class="form-group">
+                <label for="nome"><i class="fa-solid fa-tag"></i> Nome</label>
+                <input type="text" id="nome" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="endereco"><i class="fa-solid fa-location-dot"></i> Endereço</label>
+                <input type="text" id="endereco" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="categoria"><i class="fa-solid fa-list"></i> Categoria</label>
+                <select id="categoria" class="form-control" required>
+                    <option>Carregando...</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <span>Salvar Alterações</span>
+            </button>
+            <a href="meus-estabelecimentos.html" class="btn-cancel">Cancelar</a>
+        </form>
+    </div>
+</main>
+
+<script>
+    const API_BASE_URL = 'http://localhost:3000';
+    const token = localStorage.getItem('token');
+
+    function logout() {
+        if (confirm('Você tem certeza que deseja sair?')) {
+            localStorage.removeItem('usuario');
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        }
+    }
+
+    // Preview de Imagem Local (UX Improvement)
+    document.getElementById('imagem').addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('image-preview').src = e.target.result;
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const form = document.getElementById('formEditarEstabelecimento');
+        const nomeInput = document.getElementById('nome');
+        const enderecoInput = document.getElementById('endereco');
+        const categoriaSelect = document.getElementById('categoria');
+        const imagePreview = document.getElementById('image-preview');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const estabelecimentoId = urlParams.get('id');
+
+        if (!estabelecimentoId) {
+            alert('ID do estabelecimento não encontrado.');
+            window.location.href = 'meus-estabelecimentos.html';
+            return;
+        }
+
+        try {
+            // Busca paralela para eficiência
+            const [categoriasResponse, estResponse] = await Promise.all([
+                fetch(`${API_BASE_URL}/api/categorias`),
+                fetch(`${API_BASE_URL}/api/estabelecimentos/${estabelecimentoId}`)
+            ]);
+
+            if (!estResponse.ok) throw new Error('Estabelecimento não encontrado.');
+            
+            const categorias = await categoriasResponse.json();
+            const est = await estResponse.json();
+
+            // Popula Categorias
+            categoriaSelect.innerHTML = '';
+            categorias.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.id;
+                option.textContent = cat.nome;
+                categoriaSelect.appendChild(option);
+            });
+
+            // Popula Dados do Estabelecimento
+            nomeInput.value = est.nome;
+            enderecoInput.value = est.endereco;
+            
+            // Lógica de Imagem
+            if (est.imagem) {
+                imagePreview.src = `${API_BASE_URL}${est.imagem}`;
+            } else {
+                imagePreview.src = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'; // Placeholder bonito
+            }
+
+            // Seleciona Categoria Atual
+            // Nota: Se a API retorna o nome da categoria, encontramos o ID. Se retorna o ID, usamos direto.
+            // Assumindo que est.categoria retorna o NOME conforme seu código original
+            const categoriaDoEst = categorias.find(c => c.nome === est.categoria || c.id === est.categoria_id);
+            if (categoriaDoEst) {
+                categoriaSelect.value = categoriaDoEst.id;
+            }
+
+            // Remove o loading
+            loadingOverlay.style.display = 'none';
+
+        } catch (error) {
+            console.error('Erro:', error);
+            loadingOverlay.innerHTML = `<p style="color:red">Erro ao carregar dados: ${error.message}</p><a href="meus-estabelecimentos.html">Voltar</a>`;
+        }
+
+        // --- SUBMIT ---
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const imagemInput = document.getElementById('imagem');
+            const file = imagemInput.files[0];
+            let imageUrl = null;
+
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            const originalBtnText = submitButton.innerHTML;
+            
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+
+            try {
+                // 1. Upload de nova imagem (se houver)
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('imagem', file);
+                    const uploadResponse = await fetch(`${API_BASE_URL}/api/upload`, { method: 'POST', body: formData });
+                    if (!uploadResponse.ok) throw new Error('Falha no upload da imagem.');
+                    const uploadResult = await uploadResponse.json();
+                    imageUrl = uploadResult.url;
+                }
+
+                // 2. Montar Payload
+                const dadosAtualizados = {
+                    nome: nomeInput.value,
+                    endereco: enderecoInput.value,
+                    categoria_id: categoriaSelect.value,
+                    imagem_url: imageUrl // null se não trocou a imagem
+                };
+                
+                // 3. Request PUT
+                const response = await fetch(`${API_BASE_URL}/api/estabelecimentos/${estabelecimentoId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(dadosAtualizados)
+                });
+
+                if (!response.ok) {
+                    const erro = await response.json();
+                    throw new Error(erro.error || 'Falha ao atualizar.');
+                }
+
+                // Sucesso
+                submitButton.innerHTML = '<i class="fa-solid fa-check"></i> Salvo!';
+                submitButton.style.backgroundColor = '#28a745';
+                
+                setTimeout(() => {
+                    alert('Alterações salvas com sucesso!');
+                    window.location.href = 'meus-estabelecimentos.html';
+                }, 500);
+
+            } catch (error) {
+                alert(`Erro: ${error.message}`);
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalBtnText;
+            }
+        });
+    });
+</script>
+</body>
+</html>

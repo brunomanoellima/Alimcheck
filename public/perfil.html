@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Meu Perfil - AlimCheck</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #5cb85c;
+            --primary-dark: #4cae4c;
+            --bg-body: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 16px;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: var(--bg-body); 
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .topo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 15px 5%; 
+            background: var(--white); 
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-link { 
+            text-decoration: none; 
+            color: var(--primary-color); 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topo .logo { 
+            font-size: 1.6em; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        .menu { display: flex; align-items: center; gap: 15px; }
+        
+        .menu a { 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.9em;
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            transition: all 0.3s ease; 
+        }
+
+        .menu a:hover { 
+            background: rgba(92, 184, 92, 0.1); 
+            color: var(--primary-color); 
+        }
+
+        .menu a.btn-sair { color: #dc3545; }
+        .menu a.btn-sair:hover { background-color: #ffeaea; }
+
+        /* --- Profile Container --- */
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+        }
+
+        .perfil-card { 
+            background: white; 
+            width: 100%;
+            max-width: 500px; 
+            padding: 50px 30px; 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow-md); 
+            text-align: center; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Topo decorativo do card */
+        .perfil-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(135deg, #5cb85c 0%, #82d182 100%);
+            z-index: 0;
+        }
+
+        /* --- Avatar Area --- */
+        .avatar-wrapper {
+            position: relative;
+            margin-bottom: 25px;
+            z-index: 1;
+            margin-top: 20px;
+        }
+
+        #perfil-avatar {
+            width: 140px; 
+            height: 140px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            background-color: var(--primary-color); 
+            color: white; 
+            font-size: 50px;
+            font-weight: bold; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            border: 5px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .btn-edit-avatar {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: var(--text-dark);
+            color: white;
+            border: 3px solid white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .btn-edit-avatar:hover {
+            transform: scale(1.1);
+            background: var(--primary-color);
+        }
+
+        /* --- Info Area --- */
+        .info-group {
+            z-index: 1;
+            width: 100%;
+        }
+
+        .name-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        #perfil-nome { 
+            font-size: 1.8em; 
+            font-weight: 700; 
+            color: var(--text-dark); 
+            margin: 0;
+        }
+
+        .btn-edit-name {
+            background: none;
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: color 0.2s;
+            padding: 5px;
+        }
+
+        .btn-edit-name:hover {
+            color: var(--primary-color);
+        }
+
+        #perfil-email { 
+            font-size: 1em; 
+            color: var(--text-light); 
+            margin: 5px 0 20px 0; 
+        }
+
+        .badge { 
+            display: inline-block; 
+            padding: 8px 20px; 
+            border-radius: 50px; 
+            font-size: 0.85em; 
+            font-weight: 600; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-cliente { background-color: #e8f5e9; color: #2e7d32; }
+        .badge-admin { background-color: #e3f2fd; color: #1565c0; }
+        .badge-dono { background-color: #fff3e0; color: #ef6c00; }
+
+        /* --- Modals --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px); /* Efeito moderno de desfoque */
+            display: none; justify-content: center; align-items: center; 
+            z-index: 2000; opacity: 0; transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active { display: flex; opacity: 1; }
+
+        .modal-content {
+            background: white; 
+            padding: 30px; 
+            border-radius: var(--radius); 
+            width: 90%; max-width: 400px;
+            box-shadow: var(--shadow-md); 
+            transform: scale(0.9); 
+            transition: transform 0.3s ease; 
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content { transform: scale(1); }
+
+        .modal-content h2 { 
+            margin-top: 0; 
+            color: var(--text-dark); 
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close-modal:hover { color: var(--text-dark); }
+
+        .form-group { margin-bottom: 15px; }
+
+        .modal-content input { 
+            width: 100%; 
+            padding: 12px 15px; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 8px; 
+            font-size: 1rem; 
+            box-sizing: border-box; 
+            font-family: 'Montserrat', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .modal-content input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .modal-content button[type="submit"] {
+             padding: 12px; 
+             background: var(--primary-color); 
+             color: white; 
+             border: none;
+             border-radius: 50px; 
+             cursor: pointer; 
+             transition: background 0.2s, transform 0.1s; 
+             width: 100%; 
+             font-weight: 600;
+             font-size: 1rem;
+             margin-top: 10px;
+             font-family: 'Montserrat', sans-serif;
+        }
+
+        .modal-content button[type="submit"]:hover { 
+            background: var(--primary-dark); 
+            transform: translateY(-1px);
+        }
+
+        /* Label do input file customizado */
+        .file-upload-wrapper {
+            position: relative;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .file-upload-info {
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+<header class="topo">
+    <a href="#" id="logo-link" class="logo-link">
+        <i class="fa-solid fa-utensils"></i>
+        <div class="logo">AlimCheck</div>
+    </a>
+    <nav class="menu" id="nav-menu"></nav>
+</header>
+
+<main class="container">
+    <div class="perfil-card">
+        <div class="avatar-wrapper">
+            <img id="perfil-avatar" src="" alt="Avatar" />
+            <div id="avatar-placeholder" style="display:none;"></div>
+            <button class="btn-edit-avatar" id="btn-open-avatar" title="Alterar foto">
+                <i class="fa-solid fa-camera"></i>
+            </button>
+        </div>
+
+        <div class="info-group">
+            <div class="name-container">
+                <h1 id="perfil-nome">Carregando...</h1>
+                <button class="btn-edit-name" id="btn-open-name" title="Editar nome">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+            </div>
+            
+            <p id="perfil-email"><i class="fa-regular fa-envelope"></i> <span>...</span></p>
+            <div id="perfil-tipo" class="badge"></div>
+        </div>
+    </div>
+</main>
+
+<div id="avatar-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+        <h2><i class="fa-solid fa-image"></i> Alterar Foto</h2>
+        <form id="avatar-form-modal">
+            <div class="file-upload-wrapper">
+                <input type="file" id="avatar-input" name="imagem" accept="image/png, image/jpeg" required>
+                <div class="file-upload-info">Formatos: JPG ou PNG</div>
+            </div>
+            <button type="submit">Salvar Nova Foto</button>
+        </form>
+    </div>
+</div>
+
+<div id="name-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+        <h2><i class="fa-solid fa-user-pen"></i> Alterar Nome</h2>
+        <form id="name-form-modal">
+            <div class="form-group">
+                <input type="text" id="name-input" placeholder="Digite seu novo nome" required minlength="3">
+            </div>
+            <button type="submit">Salvar Alteração</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const API_BASE_URL = 'http://localhost:3000';
+
+    function logout() {
+        localStorage.removeItem('usuario');
+        localStorage.removeItem('token');
+        window.location.href = 'login.html'; // Ajuste conforme necessário
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        const token = localStorage.getItem('token');
+        const navMenu = document.getElementById('nav-menu');
+        const logoLink = document.getElementById('logo-link');
+        
+        // Elementos do DOM
+        const avatarImg = document.getElementById('perfil-avatar');
+        const nomeDisplay = document.getElementById('perfil-nome');
+        const emailDisplay = document.querySelector('#perfil-email span');
+        const tipoDisplay = document.getElementById('perfil-tipo');
+
+        // Modals
+        const avatarModal = document.getElementById('avatar-modal');
+        const nameModal = document.getElementById('name-modal');
+        
+        if (!usuario || !usuario.nome) {
+            // alert('Usuário não autenticado.');
+            // window.location.href = 'login.html';
+            // return;
+        }
+
+        // Renderizar dados do usuário
+        if(usuario) {
+            nomeDisplay.textContent = usuario.nome;
+            emailDisplay.textContent = usuario.email;
+            
+            // Tratamento do Avatar
+            if (usuario.avatar_url) {
+                avatarImg.src = `${API_BASE_URL}${usuario.avatar_url}`;
+                avatarImg.style.display = 'block';
+            } else {
+                // Se não tiver imagem, cria um avatar com iniciais
+                avatarImg.style.display = 'none';
+                const placeholder = document.getElementById('avatar-placeholder');
+                placeholder.style.display = 'flex';
+                placeholder.id = 'perfil-avatar'; // Reutiliza o estilo
+                placeholder.textContent = usuario.nome.charAt(0).toUpperCase();
+            }
+
+            // Tratamento do Badge de Tipo
+            const rawType = usuario.tipo.toLowerCase();
+            let typeLabel = 'Cliente';
+            let badgeClass = 'badge-cliente';
+
+            if (rawType === 'admin') { typeLabel = 'Administrador'; badgeClass = 'badge-admin'; }
+            if (rawType === 'dono_estabelecimento') { typeLabel = 'Dono de Restaurante'; badgeClass = 'badge-dono'; }
+
+            tipoDisplay.textContent = typeLabel;
+            tipoDisplay.className = `badge ${badgeClass}`;
+
+            // Menu de Navegação Condicional
+            let homeUrl = 'menu-principal.html';
+            let navLinksHTML = '';
+
+            const linkSair = `<a href="#" onclick="logout()" class="btn-sair"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a>`;
+            const linkInicio = `<a href="menu-principal.html"><i class="fa-solid fa-house"></i> Início</a>`;
+
+            if (rawType === 'admin') {
+                homeUrl = 'painel-admin.html';
+                navLinksHTML = `${linkInicio} <a href="${homeUrl}">Painel</a> ${linkSair}`;
+            } else if (rawType === 'dono_estabelecimento') {
+                homeUrl = 'painel-dono.html';
+                navLinksHTML = `${linkInicio} <a href="${homeUrl}">Painel</a> <a href="meus-estabelecimentos.html">Meus Locais</a> ${linkSair}`;
+            } else {
+                homeUrl = 'menu-principal.html';
+                navLinksHTML = `${linkInicio} <a href="minhas-avaliacoes.html">Avaliações</a> ${linkSair}`;
+            }
+            navMenu.innerHTML = navLinksHTML;
+            logoLink.href = homeUrl;
+        }
+
+        // --- Lógica dos Modals ---
+        
+        // Abrir
+        document.getElementById('btn-open-avatar').addEventListener('click', () => avatarModal.classList.add('active'));
+        document.getElementById('btn-open-name').addEventListener('click', () => {
+            document.getElementById('name-input').value = usuario.nome;
+            nameModal.classList.add('active');
+        });
+
+        // Fechar (X ou clique fora)
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.classList.remove('active');
+            });
+            modal.querySelector('.close-modal').addEventListener('click', () => {
+                modal.classList.remove('active');
+            });
+        });
+
+        // --- Submissão dos Formulários ---
+
+        // Alterar Foto
+        document.getElementById('avatar-form-modal').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = document.getElementById('avatar-input').files[0];
+            if (!file) return alert('Selecione uma imagem.');
+
+            const formData = new FormData();
+            formData.append('imagem', file);
+            
+            const btnSubmit = e.target.querySelector('button');
+            const originalText = btnSubmit.textContent;
+            btnSubmit.textContent = 'Enviando...';
+            btnSubmit.disabled = true;
+
+            try {
+                // 1. Upload
+                const uploadRes = await fetch(`${API_BASE_URL}/api/upload`, { method: 'POST', body: formData });
+                if (!uploadRes.ok) throw new Error('Erro no upload da imagem.');
+                const uploadResult = await uploadRes.json();
+                
+                // 2. Atualizar Usuário
+                const updateRes = await fetch(`${API_BASE_URL}/api/usuarios/avatar`, {
+                    method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ avatar_url: uploadResult.url })
+                });
+                if (!updateRes.ok) throw new Error('Erro ao vincular imagem.');
+                
+                // 3. Atualizar LocalStorage e Interface
+                const novoUsuario = { ...usuario, avatar_url: uploadResult.url };
+                localStorage.setItem('usuario', JSON.stringify(novoUsuario));
+                
+                alert('Foto atualizada com sucesso!');
+                window.location.reload();
+            } catch (error) { 
+                alert(`Erro: ${error.message}`); 
+                btnSubmit.textContent = originalText;
+                btnSubmit.disabled = false;
+            }
+        });
+
+        // Alterar Nome
+        document.getElementById('name-form-modal').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const novoNome = document.getElementById('name-input').value.trim();
+            if (novoNome.length < 3) return alert('Nome muito curto.');
+            
+            if (novoNome === usuario.nome) {
+                nameModal.classList.remove('active');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/usuarios/nome`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ nome: novoNome })
+                });
+                if (!response.ok) throw new Error('Falha ao atualizar nome.');
+                
+                const novoUsuario = { ...usuario, nome: novoNome };
+                localStorage.setItem('usuario', JSON.stringify(novoUsuario));
+                
+                alert('Nome atualizado!');
+                window.location.reload();
+            } catch (error) {
+                alert(`Erro: ${error.message}`);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

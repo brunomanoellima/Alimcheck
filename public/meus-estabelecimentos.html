@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Meus Estabelecimentos - AlimCheck</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #5cb85c;
+            --primary-dark: #4cae4c;
+            --bg-body: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 16px;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: var(--bg-body); 
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .topo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 15px 5%; 
+            background: var(--white); 
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-link { 
+            text-decoration: none; 
+            color: var(--primary-color); 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topo .logo { 
+            font-size: 1.6em; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        .menu { display: flex; align-items: center; gap: 15px; }
+        
+        .menu a { 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.9em;
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            transition: all 0.3s ease; 
+        }
+
+        .menu a:hover { 
+            background: rgba(92, 184, 92, 0.1); 
+            color: var(--primary-color); 
+        }
+
+        .menu a.btn-sair { color: #dc3545; }
+        .menu a.btn-sair:hover { background-color: #ffeaea; }
+
+        /* --- Main Content --- */
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .page-header h1 { 
+            margin: 0; 
+            font-size: 1.8rem; 
+            color: var(--text-dark); 
+        }
+
+        /* --- Grid --- */
+        .establishment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        /* Card Genérico */
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+            border: 1px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* --- Card "Adicionar Novo" --- */
+        .add-card {
+            border: 2px dashed var(--primary-color);
+            background-color: #fcfcfc;
+            color: var(--primary-color);
+            text-decoration: none;
+            align-items: center;
+            justify-content: center;
+            min-height: 320px; /* Altura aproximada dos outros cards */
+            cursor: pointer;
+        }
+
+        .add-card:hover {
+            background-color: #f0fff4;
+            border-color: var(--primary-dark);
+        }
+
+        .add-content {
+            text-align: center;
+        }
+
+        .add-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .add-text {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* --- Card Estabelecimento --- */
+        .est-card .card-img-wrapper {
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .est-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .est-card .card-body {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .est-category {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .est-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+        }
+
+        .card-actions {
+            margin-top: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-card {
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-edit {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        .btn-edit:hover { background-color: #bbdefb; }
+
+        .btn-reviews {
+            background-color: #fff3e0;
+            color: #f57c00;
+        }
+        .btn-reviews:hover { background-color: #ffe0b2; }
+
+        /* Loading */
+        .loading-container {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    (function() {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario || usuario.tipo.toLowerCase() !== 'dono_estabelecimento') {
+            // window.location.href = 'login.html'; 
+            console.warn('Acesso restrito: Dono apenas');
+        }
+    })();
+</script>
+
+<header class="topo">
+    <a href="painel-dono.html" class="logo-link">
+        <i class="fa-solid fa-utensils"></i>
+        <div class="logo">AlimCheck</div>
+    </a>
+    <nav class="menu">
+        <a href="painel-dono.html"><i class="fa-solid fa-chart-line"></i> Painel</a>
+        <a href="perfil.html"><i class="fa-regular fa-user"></i> Perfil</a>
+        <a href="#" onclick="logout()" class="btn-sair"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a>
+    </nav>
+</header>
+
+<main class="container">
+    <div class="page-header">
+        <h1><i class="fa-solid fa-store" style="color: var(--primary-color);"></i> Meus Estabelecimentos</h1>
+    </div>
+
+    <div id="establishment-grid" class="establishment-grid">
+        <div class="loading-container">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size: 2em; margin-bottom: 10px;"></i>
+            <p>Carregando seus locais...</p>
+        </div>
+    </div>
+</main>
+
+<script>
+    const API_BASE_URL = 'http://localhost:3000';
+
+    function logout() {
+        if (confirm('Você tem certeza que deseja sair?')) {
+            localStorage.removeItem('usuario');
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const grid = document.getElementById('establishment-grid');
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        
+        if(!usuario) return; // Auth guard já tratou
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/estabelecimentos/dono/${usuario.id}`);
+            if (!response.ok) throw new Error('Falha ao carregar dados.');
+            const estabelecimentos = await response.json();
+
+            grid.innerHTML = ''; // Limpa loading
+
+            // 1. Card de Adicionar (Sempre presente)
+            const addCard = document.createElement('a');
+            addCard.href = 'cadastro-estabelecimento.html';
+            addCard.className = 'card add-card';
+            addCard.innerHTML = `
+                <div class="add-content">
+                    <i class="fa-solid fa-circle-plus add-icon"></i>
+                    <div class="add-text">Cadastrar Novo<br>Estabelecimento</div>
+                </div>
+            `;
+            grid.appendChild(addCard);
+
+            // 2. Cards dos Estabelecimentos
+            if (estabelecimentos.length > 0) {
+                estabelecimentos.forEach(est => {
+                    // Imagem ou Placeholder
+                    const imageUrl = est.imagem ? `${API_BASE_URL}${est.imagem}` : 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60';
+                    
+                    const card = document.createElement('div');
+                    card.className = 'card est-card';
+                    
+                    card.innerHTML = `
+                        <div class="card-img-wrapper">
+                            <img src="${imageUrl}" alt="Foto de ${est.nome}" loading="lazy">
+                        </div>
+                        <div class="card-body">
+                            <span class="est-category">${est.categoria || 'Geral'}</span>
+                            <h3>${est.nome}</h3>
+                            
+                            <div class="card-actions">
+                                <a href="editar-estabelecimento.html?id=${est.id}" class="btn-card btn-edit">
+                                    <i class="fa-solid fa-pen"></i> Editar
+                                </a>
+                                <a href="estabelecimento-detalhes.html?id=${est.id}" class="btn-card btn-reviews">
+                                    <i class="fa-solid fa-star"></i> Ver Página
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+        } catch (error) {
+            console.error('Erro:', error);
+            grid.innerHTML = `
+                <div class="loading-container" style="color: #dc3545;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 2em; margin-bottom: 10px;"></i>
+                    <p>Erro ao carregar estabelecimentos.</p>
+                </div>`;
+        }
+    });
+</script>
+
+</body>
+</html>

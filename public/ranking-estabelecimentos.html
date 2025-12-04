@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Ranking - AlimCheck</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #5cb85c;
+            --primary-dark: #4cae4c;
+            --bg-body: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 15px rgba(0,0,0,0.1);
+            --radius: 12px;
+            
+            /* Cores do Ranking */
+            --gold: #FFD700;
+            --silver: #C0C0C0;
+            --bronze: #CD7F32;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: var(--bg-body); 
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .topo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 15px 5%; 
+            background: var(--white); 
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-link { 
+            text-decoration: none; 
+            color: var(--primary-color); 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topo .logo { 
+            font-size: 1.6em; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        .menu { display: flex; align-items: center; gap: 15px; }
+        
+        .menu a { 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.9em;
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            transition: all 0.3s ease; 
+        }
+
+        .menu a:hover { 
+            background: rgba(92, 184, 92, 0.1); 
+            color: var(--primary-color); 
+        }
+        
+        .menu a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .menu a.btn-sair { color: #dc3545; }
+        .menu a.btn-sair:hover { background-color: #ffeaea; }
+
+        /* --- Main Content --- */
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 { 
+            font-size: 2em; 
+            margin: 0 0 10px 0; 
+            font-weight: 800; 
+            color: var(--text-dark);
+        }
+        
+        .page-header p {
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        /* --- Ranking List --- */
+        .ranking-list { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+        }
+
+        .ranking-item { 
+            display: flex; 
+            align-items: center; 
+            background-color: white; 
+            border-radius: 16px; 
+            padding: 15px; 
+            transition: transform 0.2s, box-shadow 0.2s; 
+            box-shadow: var(--shadow-sm);
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ranking-item:hover { 
+            transform: translateY(-3px); 
+            box-shadow: var(--shadow-md); 
+            border-color: rgba(92, 184, 92, 0.3);
+        }
+
+        /* Rank Badge (Position) */
+        .rank-pos { 
+            width: 50px; 
+            height: 50px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            color: #999;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        /* Estilos Especiais Top 3 */
+        .rank-1 .rank-pos { color: var(--gold); text-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 2rem; }
+        .rank-2 .rank-pos { color: var(--silver); font-size: 1.8rem; }
+        .rank-3 .rank-pos { color: var(--bronze); font-size: 1.8rem; }
+        
+        /* Ícones de troféu/medalha */
+        .rank-icon {
+            font-size: 0.6em;
+            display: block;
+            margin-top: -5px;
+        }
+
+        .card-img { 
+            width: 80px; 
+            height: 80px; 
+            object-fit: cover; 
+            border-radius: 12px; 
+            margin-right: 20px;
+            background-color: #eee;
+        }
+
+        .card-info { 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+        }
+
+        .card-info h3 { 
+            margin: 0 0 5px 0; 
+            font-size: 1.2em; 
+            font-weight: 700; 
+            color: var(--text-dark);
+        }
+
+        .card-category { 
+            font-size: 0.85em; 
+            color: var(--primary-color); 
+            font-weight: 600; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Score Badge */
+        .score-box {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            min-width: 80px;
+            margin-left: 10px;
+        }
+
+        .score-badge {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .rank-1 .score-badge { background-color: #FFF9C4; color: #FBC02D; }
+        .rank-2 .score-badge { background-color: #F5F5F5; color: #757575; }
+        .rank-3 .score-badge { background-color: #FBE9E7; color: #D84315; }
+
+        .score-reviews {
+            font-size: 0.75em;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        /* Stars */
+        .stars { 
+            display: inline-block; 
+            font-size: 0; 
+            position: relative; 
+            margin-top: 5px;
+        }
+        .stars::before { 
+            content: '\f005 \f005 \f005 \f005 \f005'; 
+            font-family: 'Font Awesome 6 Free'; 
+            font-weight: 900;
+            font-size: 12px; 
+            color: #e0e0e0; 
+        }
+        .stars::after { 
+            content: '\f005 \f005 \f005 \f005 \f005'; 
+            font-family: 'Font Awesome 6 Free'; 
+            font-weight: 900;
+            font-size: 12px; 
+            color: #ffc107; 
+            position: absolute; 
+            top: 0; left: 0; 
+            white-space: nowrap; overflow: hidden; 
+            width: var(--rating); 
+        }
+
+        /* Empty State */
+        .empty-message { 
+            text-align: center; 
+            padding: 3rem; 
+            background-color: #fff; 
+            border-radius: 16px; 
+            color: var(--text-light); 
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .empty-icon { font-size: 3em; color: #e0e0e0; }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .ranking-item { flex-wrap: wrap; }
+            .rank-pos { margin-bottom: 10px; width: 100%; justify-content: flex-start; height: auto; }
+            .score-box { margin-left: 0; align-items: flex-start; width: 100%; margin-top: 10px; flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="topo">
+    <a href="#" id="logo-link" class="logo-link">
+        <i class="fa-solid fa-utensils"></i>
+        <div class="logo">AlimCheck</div>
+    </a>
+    <nav class="menu" id="nav-menu"></nav>
+</header>
+
+<main class="container">
+    <div class="page-header">
+        <h1><i class="fa-solid fa-trophy" style="color: var(--gold);"></i> Top 5 Estabelecimentos</h1>
+        <p>Os favoritos da comunidade AlimCheck</p>
+    </div>
+
+    <div class="ranking-list" id="rankingListContainer">
+        <div class="empty-message">
+            <i class="fa-solid fa-spinner fa-spin empty-icon"></i>
+            <p>Calculando notas...</p>
+        </div>
+    </div>
+</main>
+
+<script>
+    const API_BASE_URL = 'http://localhost:3000';
+
+    function logout() {
+        localStorage.removeItem('usuario');
+        localStorage.removeItem('token');
+        window.location.href = 'index.html';
+    }
+
+    function criarRankingItem(estab, rank) {
+        // Imagem ou Placeholder
+        const imageUrl = estab.imagem ? `${API_BASE_URL}${estab.imagem}` : `https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80`;
+        
+        const notaMedia = estab.nota_media ? parseFloat(estab.nota_media) : 0;
+        const totalAvaliacoes = estab.total_avaliacoes || 0;
+        const ratingPercent = (notaMedia / 5) * 100;
+        const notaFormatada = notaMedia > 0 ? notaMedia.toFixed(1) : '-';
+        const textoAvaliacoes = totalAvaliacoes === 1 ? '1 avaliação' : `${totalAvaliacoes} avaliações`;
+
+        // Lógica de Ícones do Top 3
+        let rankIconHtml = `#${rank}`;
+        let rankClass = `rank-${rank}`; // classes: rank-1, rank-2, rank-3
+        
+        if (rank === 1) rankIconHtml = `<i class="fa-solid fa-trophy"></i>`;
+        else if (rank === 2) rankIconHtml = `<i class="fa-solid fa-medal"></i>`;
+        else if (rank === 3) rankIconHtml = `<i class="fa-solid fa-medal"></i>`;
+        else rankClass = ''; // Sem classe especial para 4, 5...
+
+        const itemLink = document.createElement('a');
+        itemLink.href = `estabelecimento-detalhes.html?id=${estab.id}`;
+        itemLink.className = `ranking-item ${rankClass}`;
+        
+        itemLink.innerHTML = `
+            <div class="rank-pos">${rankIconHtml}</div>
+            <img src="${imageUrl}" alt="${estab.nome}" class="card-img">
+            <div class="card-info">
+                <span class="card-category">${estab.categoria}</span>
+                <h3>${estab.nome}</h3>
+                <div class="stars" style="--rating: ${ratingPercent}%;"></div>
+            </div>
+            <div class="score-box">
+                <div class="score-badge">
+                    <i class="fa-solid fa-star" style="font-size: 0.7em;"></i> ${notaFormatada}
+                </div>
+                <span class="score-reviews">${textoAvaliacoes}</span>
+            </div>
+        `;
+        return itemLink;
+    }
+
+    async function carregarRanking() {
+        const container = document.getElementById('rankingListContainer');
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/estabelecimentos`);
+            if (!response.ok) throw new Error("Falha ao buscar dados da API.");
+
+            const { data: estabelecimentos } = await response.json();
+
+            // Garantir ordenação por nota (caso a API não garanta)
+            // Ordena por Nota (desc), depois por Total de Avaliações (desc)
+            estabelecimentos.sort((a, b) => {
+                const notaA = parseFloat(a.nota_media) || 0;
+                const notaB = parseFloat(b.nota_media) || 0;
+                if (notaB !== notaA) return notaB - notaA;
+                return (b.total_avaliacoes || 0) - (a.total_avaliacoes || 0);
+            });
+
+            container.innerHTML = ''; 
+
+            if (!estabelecimentos || estabelecimentos.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-message">
+                        <i class="fa-regular fa-folder-open empty-icon"></i>
+                        <p>Nenhum estabelecimento encontrado.</p>
+                    </div>`;
+                return;
+            }
+            
+            // Pega top 5 (filtra apenas os que tem nota > 0 para o ranking ficar bonito)
+            const top5 = estabelecimentos.filter(e => parseFloat(e.nota_media) > 0).slice(0, 5);
+
+            if (top5.length === 0) {
+                 container.innerHTML = `
+                    <div class="empty-message">
+                        <i class="fa-regular fa-star-half-stroke empty-icon"></i>
+                        <p>Ainda não há avaliações suficientes para gerar o ranking.</p>
+                    </div>`;
+                return;
+            }
+
+            top5.forEach((estab, index) => {
+                const rank = index + 1;
+                const itemEl = criarRankingItem(estab, rank);
+                container.appendChild(itemEl);
+            });
+
+        } catch (error) {
+            console.error('Erro ao carregar o ranking:', error);
+            container.innerHTML = `
+                <div class="empty-message" style="color: #dc3545;">
+                    <i class="fa-solid fa-triangle-exclamation empty-icon"></i>
+                    <p>Erro ao carregar o ranking.</p>
+                </div>`;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const navMenu = document.getElementById('nav-menu');
+        const logoLink = document.getElementById('logo-link');
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        
+        let homeUrl = 'index.html';
+        let navLinksHTML = `<a href="login.html"><i class="fa-solid fa-right-to-bracket"></i> Entrar</a>`;
+
+        if (usuario) {
+            const userType = usuario.tipo.toLowerCase();
+            const linkSair = `<a href="#" onclick="logout()" class="btn-sair"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a>`;
+            const linkPerfil = `<a href="perfil.html"><i class="fa-regular fa-user"></i> Perfil</a>`;
+            
+            if (userType === 'admin') {
+                homeUrl = 'painel-admin.html';
+                navLinksHTML = `${linkPerfil} <a href="gerenciar-usuarios.html">Usuários</a> ${linkSair}`;
+            } else if (userType === 'dono_estabelecimento') {
+                homeUrl = 'painel-dono.html';
+                navLinksHTML = `${linkPerfil} <a href="painel-dono.html">Painel</a> ${linkSair}`;
+            } else { // Cliente
+                homeUrl = 'menu-principal.html';
+                navLinksHTML = `<a href="menu-principal.html">Início</a> ${linkPerfil} <a href="minhas-avaliacoes.html">Avaliações</a> ${linkSair}`;
+            }
+        }
+        
+        navMenu.innerHTML = navLinksHTML;
+        logoLink.href = homeUrl;
+        
+        carregarRanking();
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Avaliar - AlimCheck</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #5cb85c;
+            --primary-dark: #4cae4c;
+            --bg-body: #f8f9fa;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 16px;
+            --gold: #ffc107;
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: var(--bg-body); 
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .topo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 15px 5%; 
+            background: var(--white); 
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-link { 
+            text-decoration: none; 
+            color: var(--primary-color); 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topo .logo { 
+            font-size: 1.6em; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        .menu { display: flex; align-items: center; gap: 15px; }
+        
+        .menu a { 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.9em;
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            transition: all 0.3s ease; 
+        }
+
+        .menu a:hover { 
+            background: rgba(92, 184, 92, 0.1); 
+            color: var(--primary-color); 
+        }
+
+        .menu a.btn-sair { color: #dc3545; }
+        .menu a.btn-sair:hover { background-color: #ffeaea; }
+
+        /* --- Layout --- */
+        .container { 
+            max-width: 600px; /* Card mais estreito para foco */
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        /* --- Card de Avaliação --- */
+        .evaluation-card {
+            background: white;
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Faixa decorativa no topo */
+        .evaluation-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+        }
+
+        .evaluation-card h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.8em;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .evaluation-card p.subtitle {
+            color: var(--text-light);
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        /* --- Estrelas --- */
+        .rating-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            display: block;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-size: 0.8em;
+            letter-spacing: 1px;
+        }
+
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .star-rating input { display: none; }
+
+        .star-rating label {
+            font-size: 3rem;
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .star-rating label:hover {
+            transform: scale(1.2);
+        }
+
+        .star-rating input:checked ~ label,
+        .star-rating label:hover ~ label {
+            color: var(--gold);
+        }
+
+        /* --- Textarea --- */
+        .input-group {
+            text-align: left;
+            margin-bottom: 25px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Montserrat', sans-serif;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* --- Botões --- */
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(92, 184, 92, 0.3);
+        }
+
+        button[type="submit"]:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        button[type="submit"]:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-voltar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background-color: #e9ecef;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .btn-voltar:hover { background-color: #dee2e6; }
+
+        /* --- Mensagens de Estado (Cooldown/Erro) --- */
+        .status-box {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .status-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .box-wait .status-icon { color: #ffc107; } /* Amarelo/Laranja */
+        .box-wait h2 { color: var(--text-dark); }
+        
+        .box-error .status-icon { color: #dc3545; }
+    </style>
+</head>
+<body>
+
+<header class="topo">
+    <a href="#" id="logo-link" class="logo-link">
+        <i class="fa-solid fa-utensils"></i>
+        <div class="logo">AlimCheck</div>
+    </a>
+    <nav class="menu" id="nav-menu"></nav>
+</header>
+
+<main class="container" id="main-content">
+    <div class="evaluation-card">
+        <div id="loader" style="padding: 20px;">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size: 2em; color: var(--primary-color);"></i>
+            <p>Verificando permissões...</p>
+        </div>
+
+        <form id="formAvaliacao" style="display: none;">
+            <h1>Avalie sua Experiência</h1>
+            <p class="subtitle">Sua opinião ajuda outros usuários a escolherem melhor.</p>
+            
+            <span class="rating-label">Selecione uma nota</span>
+            <div class="star-rating">
+                <input type="radio" id="nota5" name="nota" value="5" required><label for="nota5" title="Excelente!"><i class="fa-solid fa-star"></i></label>
+                <input type="radio" id="nota4" name="nota" value="4"><label for="nota4" title="Muito bom"><i class="fa-solid fa-star"></i></label>
+                <input type="radio" id="nota3" name="nota" value="3"><label for="nota3" title="Bom"><i class="fa-solid fa-star"></i></label>
+                <input type="radio" id="nota2" name="nota" value="2"><label for="nota2" title="Ruim"><i class="fa-solid fa-star"></i></label>
+                <input type="radio" id="nota1" name="nota" value="1"><label for="nota1" title="Péssimo"><i class="fa-solid fa-star"></i></label>
+            </div>
+            
+            <div class="input-group">
+                <span class="rating-label" style="margin-bottom: 8px;">Deixe um comentário (opcional)</span>
+                <textarea id="comentario" name="comentario" placeholder="O que você mais gostou? O que pode melhorar?"></textarea>
+            </div>
+            
+            <button type="submit" id="btnSubmit">
+                Enviar Avaliação <i class="fa-solid fa-paper-plane" style="margin-left: 8px;"></i>
+            </button>
+        </form>
+    </div>
+</main>
+
+<script>
+    const API_BASE_URL = 'http://localhost:3000';
+
+    function logout() {
+        localStorage.removeItem('usuario');
+        localStorage.removeItem('token');
+        window.location.href = 'index.html';
+    }
+
+    (async function setupAvaliacaoPage() {
+        const mainContent = document.getElementById('main-content');
+        const cardContent = document.querySelector('.evaluation-card');
+        const navMenu = document.getElementById('nav-menu');
+        const logoLink = document.getElementById('logo-link');
+        const form = document.getElementById('formAvaliacao');
+        const loader = document.getElementById('loader');
+
+        // 1. MENU E AUTENTICAÇÃO
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario || usuario.tipo.toLowerCase() !== 'cliente') {
+            alert('Acesso negado. Apenas clientes podem avaliar.');
+            window.location.href = 'login.html';
+            return;
+        }
+        
+        const homeUrl = 'menu-principal.html';
+        navMenu.innerHTML = `
+            <a href="menu-principal.html"><i class="fa-solid fa-house"></i> Início</a>
+            <a href="perfil.html"><i class="fa-regular fa-user"></i> Perfil</a>
+            <a href="minhas-avaliacoes.html"><i class="fa-solid fa-star"></i> Minhas Avaliações</a>
+            <a href="#" onclick="logout()" class="btn-sair"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</a>
+        `;
+        logoLink.href = homeUrl;
+
+        // 2. VERIFICAÇÃO DE PERMISSÃO (COOLDOWN)
+        const urlParams = new URLSearchParams(window.location.search);
+        const estabelecimentoId = urlParams.get('id');
+        const token = localStorage.getItem('token');
+
+        if (!estabelecimentoId) {
+            alert('ID do estabelecimento não encontrado.');
+            window.location.href = 'menu-principal.html';
+            return;
+        }
+        
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/avaliacoes/verificar?usuarioId=${usuario.id}&estabelecimentoId=${estabelecimentoId}`);
+            
+            // Simula um delay pequeno para UX suave
+            await new Promise(r => setTimeout(r, 500)); 
+
+            if (!res.ok) throw new Error('Falha na verificação.');
+            const permissao = await res.json();
+            
+            loader.style.display = 'none';
+
+            if (!permissao.podeAvaliar) {
+                // UI de Cooldown
+                cardContent.innerHTML = `
+                    <div class="status-box box-wait">
+                        <i class="fa-solid fa-hourglass-half status-icon"></i>
+                        <h2>Aguarde para Avaliar</h2>
+                        <p style="color: #666; margin-bottom: 20px;">Você já avaliou este local recentemente.</p>
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; color: #856404; display: inline-block; margin-bottom: 20px;">
+                            Disponível em: <strong>${permissao.diasRestantes} dia(s)</strong>
+                        </div>
+                        <br>
+                        <a href="javascript:history.back()" class="btn-voltar">
+                            <i class="fa-solid fa-arrow-left"></i> Voltar
+                        </a>
+                    </div>
+                `;
+            } else {
+                // UI do Formulário
+                form.style.display = 'block';
+                // Efeito suave de aparecimento
+                form.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400 });
+            }
+
+        } catch (error) {
+            console.error("Erro:", error);
+            cardContent.innerHTML = `
+                <div class="status-box box-error">
+                    <i class="fa-solid fa-triangle-exclamation status-icon"></i>
+                    <h2>Erro de Conexão</h2>
+                    <p>Não foi possível verificar suas permissões.</p>
+                    <a href="menu-principal.html" class="btn-voltar">Voltar ao Início</a>
+                </div>
+            `;
+        }
+
+        // 3. ENVIO
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btnSubmit = document.getElementById('btnSubmit');
+            const notaSelecionada = form.querySelector('input[name="nota"]:checked');
+            
+            if (!notaSelecionada) {
+                alert('Por favor, selecione uma estrela para a nota.');
+                return;
+            }
+            
+            // Estado de Loading no Botão
+            const originalBtnContent = btnSubmit.innerHTML;
+            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Enviando...`;
+            btnSubmit.disabled = true;
+            
+            const dadosAvaliacao = {
+                estabelecimento_id: estabelecimentoId,
+                nota: notaSelecionada.value,
+                comentario: document.getElementById('comentario').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/avaliacoes`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(dadosAvaliacao)
+                });
+                const resultado = await response.json();
+                
+                if (response.ok) {
+                    // Sucesso visual
+                    cardContent.innerHTML = `
+                        <div class="status-box" style="color: var(--primary-color);">
+                            <i class="fa-regular fa-circle-check status-icon"></i>
+                            <h2>Obrigado!</h2>
+                            <p style="color: #666;">Sua avaliação foi registrada com sucesso.</p>
+                            <a href="minhas-avaliacoes.html" class="btn-voltar" style="background: var(--primary-color); color: white;">
+                                Ver minhas avaliações
+                            </a>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(resultado.error || 'Erro desconhecido.');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao enviar: ' + error.message);
+                // Restaura botão
+                btnSubmit.innerHTML = originalBtnContent;
+                btnSubmit.disabled = false;
+            }
+        });
+    })();
+</script>
+
+</body>
+</html>
