@@ -301,7 +301,7 @@ Cada requisito funcional deve ter seus critérios de aceitação específicos va
 ![Caso de Uso](https://drive.google.com/uc?export=view&id=1dMdIk5S1GGYRcexfX4TsNoCNM4kQOxZE)
 
 ### Diagrama de classes
-
+![Classes](https://drive.google.com/uc?export=view&id=1uLlV_Jar0GCP6bzHWu9cvqP1vSswjLwz)
 
 ## 📝 11. Controle de Versões
 
